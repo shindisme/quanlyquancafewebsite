@@ -1,0 +1,39 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules
+dist
+dist-ssr
+*.local
+
+.env
+
+# npm
+package-lock.json
+
+# Build artifacts and caching
+build
+.tsbuildinfo
+.eslintcache
+coverage/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+*.pem
+
+# Editor directories and files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

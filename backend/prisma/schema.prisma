@@ -1,0 +1,137 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  name      String
+  role      String   @default("STAFF")
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+model Area {
+  id     String  @id @default(uuid())
+  name   String
+  tables Table[]
+}
+
+model Table {
+  id       String  @id @default(uuid())
+  area     Area    @relation(fields: [areaId], references: [id])
+  areaId   String
+  name     String
+  isBooked Boolean @default(false)
+  orders   Order[]
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String
+  products Product[]
+  toppings Topping[]
+}
+
+model Product {
+  id           String        @id @default(uuid())
+  category     Category      @relation(fields: [categoryId], references: [id])
+  categoryId   String
+  name         String
+  price        Int
+  description  String?
+  image        String?
+  isActive     Boolean       @default(true)
+  sizes        Size[]
+  orderDetails OrderDetail[]
+}
+
+model Size {
+  id           String        @id @default(uuid())
+  product      Product       @relation(fields: [productId], references: [id])
+  productId    String
+  sizeName     String
+  extraPrice   Int           @default(0)
+  orderDetails OrderDetail[]
+}
+
+model Topping {
+  id                   String               @id @default(uuid())
+  category             Category             @relation(fields: [categoryId], references: [id])
+  categoryId           String
+  name                 String
+  price                Int
+  isActive             Boolean              @default(true)
+  orderDetailsToppings OrderDetailTopping[]
+}
+
+model Coupon {
+  id            String   @id @default(uuid())
+  code          String   @unique
+  discountType  String
+  discountValue Int
+  minValue      Int      @default(0)
+  maxDiscount   Int?
+  startDate     DateTime
+  endDate       DateTime
+  orders        Order[]
+}
+
+model Order {
+  id           String        @id @default(uuid())
+  table        Table?        @relation(fields: [tableId], references: [id])
+  tableId      String?
+  user         User?         @relation(fields: [userId], references: [id])
+  userId       String?
+  coupon       Coupon?       @relation(fields: [couponId], references: [id])
+  couponId     String?
+  createdAt    DateTime      @default(now())
+  payments     Payment[]
+  orderDetails OrderDetail[]
+}
+
+model Payment {
+  id            String  @id @default(uuid())
+  order         Order   @relation(fields: [orderId], references: [id])
+  orderId       String
+  paymentMethod String
+  transactionId String?
+  amount        Int
+  status        String  @default("PENDING")
+}
+
+model OrderDetail {
+  id                   String               @id @default(uuid())
+  order                Order                @relation(fields: [orderId], references: [id])
+  orderId              String
+  product              Product              @relation(fields: [productId], references: [id])
+  productId            String
+  size                 Size?                @relation(fields: [sizeId], references: [id])
+  sizeId               String?
+  quantity             Int                  @default(1)
+  price                Int
+  note                 String?
+  orderDetailsToppings OrderDetailTopping[]
+}
+
+model OrderDetailTopping {
+  orderDetail   OrderDetail @relation(fields: [orderDetailId], references: [id])
+  orderDetailId String
+  topping       Topping     @relation(fields: [toppingId], references: [id])
+  toppingId     String
+  price         Int
+
+  @@id([orderDetailId, toppingId])
+}

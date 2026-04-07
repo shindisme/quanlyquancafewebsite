@@ -1,0 +1,47 @@
+# Dependency directories
+node_modules/
+
+# npm
+package-lock.json
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Env files
+.env
+*.pem
+
+# Prisma 
+/src/generated/prisma
+*.db
+*.db-journal
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+:root {
+  --primary-text: #0B3C60;
+  --sub-text: #08060d;
+  --bg-color: #F5F8FF;
+  /* --border: #e5e4e7; */
+  /* --code-bg: #f4f3ec; */
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+
+  --drop-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
+  --inner-shadow: inset 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
+
+
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+body {
+  width: 1200px;
+  max-width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
