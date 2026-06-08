@@ -1,10 +1,10 @@
-import { Router } from 'express'
+import { Router } from 'express';
+import { authController } from './auth.controller.js';
+import { authenticate } from '../../middlewares/auth.middleware.js';
 
-const router = Router()
+const router = Router();
 
-// API: /api/auth/login
-router.post('/login', (req, res) => {
-  res.json({ message: 'Chức năng đăng nhập đang xây dựng...' })
-})
+router.post('/login', authController.login);
+router.get('/me', authenticate, authController.me);
 
-export default router
+export default router;

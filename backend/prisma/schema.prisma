@@ -4,126 +4,228 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider     = "prisma-client"
-  output       = "../src/generated/prisma"
-  moduleFormat = "cjs"
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
+// Enums 
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PAID
+  CANCELLED
+}
+
+enum OrderStatus {
+  PENDING // Chờ xác nhận 
+  CONFIRMED // Đã xác nhận
+  COMPLETED // Đã xong
+  CANCELLED // Huỷ lần gọi này
+}
+
+enum DiscountType {
+  PERCENT
+  VALUE
+}
+
+enum PaymentMethod {
+  CASH
+  VNPAY
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
+  id        String    @id @default(uuid())
+  username  String    @unique
+  email     String    @unique
   password  String
   name      String
-  role      String   @default("STAFF")
-  createdAt DateTime @default(now())
-  orders    Order[]
+  deletedAt DateTime?
+  role      UserRole  @default(STAFF)
+  createdAt DateTime  @default(now())
+
+  invoices Invoice[]
 }
 
 model Area {
-  id     String  @id @default(uuid())
-  name   String
+  id        String    @id @default(uuid())
+  name      String
+  deletedAt DateTime?
+
   tables Table[]
 }
 
 model Table {
-  id       String  @id @default(uuid())
-  area     Area    @relation(fields: [areaId], references: [id])
-  areaId   String
-  name     String
-  isBooked Boolean @default(false)
-  orders   Order[]
+  id        String    @id @default(uuid())
+  name      String
+  areaId    String
+  code      String    @unique
+  isBooked  Boolean   @default(false)
+  deletedAt DateTime?
+
+  area Area @relation(fields: [areaId], references: [id])
+
+  invoices Invoice[]
 }
 
 model Category {
-  id       String    @id @default(uuid())
-  name     String
+  id        String    @id @default(uuid())
+  name      String
+  deletedAt DateTime?
+
   products Product[]
   toppings Topping[]
 }
 
 model Product {
-  id           String        @id @default(uuid())
-  category     Category      @relation(fields: [categoryId], references: [id])
-  categoryId   String
-  name         String
-  price        Int
-  description  String?
-  image        String?
-  isActive     Boolean       @default(true)
+  id          String  @id @default(uuid())
+  categoryId  String
+  name        String
+  price       Int
+  description String?
+  image       String?
+
+  isAvailable Boolean   @default(true)
+  deletedAt   DateTime?
+
+  category Category @relation(fields: [categoryId], references: [id])
+
   sizes        Size[]
   orderDetails OrderDetail[]
+
+  @@index([categoryId])
 }
 
 model Size {
-  id           String        @id @default(uuid())
-  product      Product       @relation(fields: [productId], references: [id])
-  productId    String
-  sizeName     String
-  extraPrice   Int           @default(0)
+  id         String    @id @default(uuid())
+  product    Product   @relation(fields: [productId], references: [id])
+  productId  String
+  sizeName   String
+  extraPrice Int       @default(0)
+  deletedAt  DateTime?
+
   orderDetails OrderDetail[]
+
+  @@unique([productId, sizeName])
 }
 
 model Topping {
-  id                   String               @id @default(uuid())
-  category             Category             @relation(fields: [categoryId], references: [id])
-  categoryId           String
-  name                 String
-  price                Int
-  isActive             Boolean              @default(true)
+  id         String    @id @default(uuid())
+  categoryId String
+  name       String
+  price      Int
+  isActive   Boolean   @default(true)
+  deletedAt  DateTime?
+
+  category Category @relation(fields: [categoryId], references: [id])
+
   orderDetailsToppings OrderDetailTopping[]
+
+  @@unique([categoryId, name])
 }
 
 model Coupon {
-  id            String   @id @default(uuid())
-  code          String   @unique
-  discountType  String
+  id            String       @id @default(uuid())
+  code          String       @unique
+  discountType  DiscountType
   discountValue Int
-  minValue      Int      @default(0)
+  minValue      Int          @default(0)
   maxDiscount   Int?
+  limit         Int?
+  usedCount     Int          @default(0)
+  isActive      Boolean      @default(true)
   startDate     DateTime
-  endDate       DateTime
-  orders        Order[]
+  endDate       DateTime?
+  deletedAt     DateTime?
+
+  invoices Invoice[]
+}
+
+model Invoice {
+  id       String  @id @default(uuid())
+  code     String  @unique // INV-XXXXX
+  tableId  String?
+  userId   String?
+  couponId String?
+
+  totalAmount    Int @default(0) // Tổng tiền tất cả Order
+  discountAmount Int @default(0) // Tiền giảm giá
+  finalAmount    Int @default(0) // Tiền phải trả = totalAmount - discountAmount
+
+  status    InvoiceStatus @default(UNPAID)
+  createdAt DateTime      @default(now())
+  paidAt    DateTime?
+
+  table    Table?    @relation(fields: [tableId], references: [id])
+  user     User?     @relation(fields: [userId], references: [id])
+  coupon   Coupon?   @relation(fields: [couponId], references: [id])
+  orders   Order[]
+  payments Payment[]
+
+  @@index([tableId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Order {
-  id           String        @id @default(uuid())
-  table        Table?        @relation(fields: [tableId], references: [id])
-  tableId      String?
-  user         User?         @relation(fields: [userId], references: [id])
-  userId       String?
-  coupon       Coupon?       @relation(fields: [couponId], references: [id])
-  couponId     String?
-  createdAt    DateTime      @default(now())
-  payments     Payment[]
+  id        String      @id @default(uuid())
+  invoiceId String
+  code      String      @unique // ORD-XXXXX 
+  subTotal  Int         @default(0) // Tổng tiền lần gọi này
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+
+  invoice      Invoice       @relation(fields: [invoiceId], references: [id])
   orderDetails OrderDetail[]
+
+  @@index([invoiceId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Payment {
-  id            String  @id @default(uuid())
-  order         Order   @relation(fields: [orderId], references: [id])
-  orderId       String
-  paymentMethod String
+  id            String        @id @default(uuid())
+  invoiceId     String
+  method        PaymentMethod
   transactionId String?
   amount        Int
-  status        String  @default("PENDING")
+  status        PaymentStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id])
 }
 
 model OrderDetail {
-  id                   String               @id @default(uuid())
-  order                Order                @relation(fields: [orderId], references: [id])
-  orderId              String
-  product              Product              @relation(fields: [productId], references: [id])
-  productId            String
-  size                 Size?                @relation(fields: [sizeId], references: [id])
-  sizeId               String?
-  quantity             Int                  @default(1)
-  price                Int
-  note                 String?
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  sizeId    String?
+
+  quantity Int     @default(1)
+  price    Int
+  note     String?
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  size    Size?   @relation(fields: [sizeId], references: [id])
+
   orderDetailsToppings OrderDetailTopping[]
+
+  @@index([orderId])
 }
 
 model OrderDetailTopping {

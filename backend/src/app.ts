@@ -1,22 +1,24 @@
-import express from 'express'
-import cors from 'cors'
-import helmet from 'helmet'
-import routes from './routes.js'
-import { errorHandler, notFoundHandler } from './middlewares/error.middleware.js'
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import routes from './routes.js';
+import { errorHandler, notFoundHandler } from './middlewares/error.middleware.js';
 
-const app = express()
+const app = express();
 
 // Middlewares
-app.use(helmet())
-app.use(cors())
-app.use(express.json())
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
 
-app.use('/api/v1', routes)
+app.use('/api/v1', routes);
 
-// Middleware bắt các route không tồn tại (404)
-app.use(notFoundHandler)
+app.get('/', (req, res) => {
+    res.redirect('/api/v1')
+})
 
-// Middleware xử lý lỗi chung (Luôn phải đặt ở cuối cùng sau tất cả các routes)
-app.use(errorHandler)
+// handle routes ko tồn tại
+app.use(notFoundHandler);
+app.use(errorHandler);
 
-export default app
+export default app;
