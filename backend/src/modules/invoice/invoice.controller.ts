@@ -27,21 +27,19 @@ export const invoiceController = {
     }
   },
 
-  /* Dùng cho: Khách quét QR --> kiểm tra bàn đã có hoá đơn chưa. */
   async getByTable(req: Request, res: Response, next: NextFunction) {
     try {
-      const tableId = req.params.tableId;
+      const tableId = req.params.tableId as string;
+      if (!tableId) {
+        return res.status(400).json({ status: 'error', message: 'Thiếu tableId' });
+      }
       const data = await invoiceService.getUnpaidByTable(tableId);
-      // Trả null nếu không có --> client sẽ tạo mới khi đặt món
       res.status(200).json({ status: 'success', data });
     } catch (error) {
       next(error);
     }
   },
 
-  /* Tạo hoá đơn mới cho bàn.
-     Nếu bàn đã có hoá đơn UNPAID --> trả lại hoá đơn đó (idempotent).
-  */
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const { tableId } = z.object({ tableId: z.string().uuid() }).parse(req.body);
@@ -52,7 +50,6 @@ export const invoiceController = {
     }
   },
 
-  /* Thanh toán hoá đơn. Chỉ nhân viên mới được thanh toán . */
   async processPayment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = paramSchema.parse(req.params);

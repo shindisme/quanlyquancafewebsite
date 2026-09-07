@@ -58,9 +58,9 @@ export const userService = {
     },
 
     async deleteUser(id: string) {
-        const orderCount = await prisma.order.count({ where: { userId: id } });
+        const invoiceCount = await prisma.invoice.count({ where: { userId: id } });
 
-        if (orderCount === 0) {
+        if (invoiceCount === 0) {
             return await prisma.user.delete({ where: { id } });
         } else {
             return await prisma.user.update({

@@ -27,7 +27,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 export const authorize = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const userRole = req.user?.role;
-    if (!roles.includes(userRole)) {
+    if (!userRole || !roles.includes(userRole)) {
       return next({ statusCode: 403, message: 'Bạn không có quyền thực hiện hành động này' } as AppError);
     }
     next();
