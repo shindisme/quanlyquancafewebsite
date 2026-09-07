@@ -14,8 +14,8 @@ import ConfirmDeleteModal from '../../../components/Admin/ui/ConfirmDeleteModal'
 import ExportConfirmModal from '../../../components/Admin/ui/ExportConfirmModal';
 import { exportToExcel } from '../../../utils/exportExcel';
 
-interface Area { id: string; name: string; }
-interface Table { id: string; name: string; areaId: string; code: string; isBooked: boolean; area?: Area; }
+export interface Area { id: string; name: string; }
+export interface Table { id: string; name: string; areaId?: string; code: string; isBooked: boolean; area?: { id?: string; name: string; }; }
 
 const TableManage = () => {
   const { data: tables, loading, refetch } = useFetch(tableService);

@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
+import { useState, useEffect, type FormEvent, type ChangeEvent } from 'react';
 import { ImagePlus } from 'lucide-react';
 import { toast } from 'react-toastify';
 import Modal from '../../../components/Admin/ui/Modal';

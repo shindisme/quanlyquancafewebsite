@@ -1,13 +1,6 @@
 import { Pencil, Trash2, Eye } from 'lucide-react';
 import DataTable, { type Column } from '../../../components/Admin/ui/DataTable';
-
-interface Table {
-  id: string;
-  name: string;
-  code: string;
-  isBooked: boolean;
-  area?: { name: string };
-}
+import type { Table } from './TableManage';
 
 interface Props {
   data: Table[];

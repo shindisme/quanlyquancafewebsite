@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from 'react';
+import { useState, useEffect, type FC } from 'react';
 import { X, Minus, Plus } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 

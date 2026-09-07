@@ -2,14 +2,7 @@ import { Download, Link, Layers } from 'lucide-react';
 import Modal from '../../../components/Admin/ui/Modal';
 import { QRCodeCanvas } from 'qrcode.react';
 import { toast } from 'react-toastify';
-
-interface Table {
-  id: string;
-  name: string;
-  code: string;
-  isBooked: boolean;
-  area?: { name: string };
-}
+import type { Table } from './TableManage';
 
 interface Props {
   isOpen: boolean;

@@ -1,12 +1,5 @@
 import { Pencil, Trash2, Eye, HandPlatter } from 'lucide-react';
-
-interface Table {
-  id: string;
-  name: string;
-  code: string;
-  isBooked: boolean;
-  area?: { name: string };
-}
+import type { Table } from './TableManage';
 
 interface Props {
   data: Table[];
