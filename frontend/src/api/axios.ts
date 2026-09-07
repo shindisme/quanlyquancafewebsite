@@ -17,10 +17,12 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       const requestUrl = error.config?.url || '';
-      if (!requestUrl.includes('/auth/me')) {
+      if (!requestUrl.includes('/auth/me') && !requestUrl.includes('/auth/login')) {
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpiry');
-        window.location.href = '/login';
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
       }
     }
     return Promise.reject(error);

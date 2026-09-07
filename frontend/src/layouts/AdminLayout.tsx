@@ -1,12 +1,3 @@
-/**
- * AdminLayout — Layout cho quản trị viên (role = ADMIN)
- *
- * THAY ĐỔI:
- * - Dùng Sidebar & Header từ components/common/ (dùng chung với Staff)
- * - Thêm check role: nếu là STAFF → redirect /staff/pos
- * - Truyền basePath="/admin" cho Sidebar/Header
- */
-
 import { Outlet, Navigate } from 'react-router-dom';
 import SidebarComponent from '../components/common/Sidebar';
 import Header from '../components/common/Header';
@@ -19,7 +10,6 @@ function AdminLayout() {
 
   const token = localStorage.getItem('token');
   const expiry = localStorage.getItem('tokenExpiry');
-  // eslint-disable-next-line react-hooks/purity
   const isExpired = !expiry || Date.now() > parseInt(expiry);
 
   if (loading) {
@@ -45,7 +35,6 @@ function AdminLayout() {
     return <Navigate to="/login" replace />;
   }
 
-  // Staff không được vào Admin → redirect
   if (user.role === 'STAFF') {
     return <Navigate to="/staff/pos" replace />;
   }

@@ -4,7 +4,7 @@ import { ChevronDown, LogOut, UserCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
-  basePath: string; // '/admin' hoặc '/staff'
+  basePath: string;
 }
 
 const Header = ({ basePath }: HeaderProps) => {

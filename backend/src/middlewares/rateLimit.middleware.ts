@@ -1,12 +1,3 @@
-/**
- * Rate Limit Middleware — Giới hạn số request/IP
- *
- * - Mỗi IP được phép gửi tối đa N request trong M phút
- * - Vượt quá → trả về lỗi 429 (Too Many Requests)
- * - Đếm request theo IP, reset sau M phút
- *
- */
-
 import rateLimit from 'express-rate-limit';
 
 

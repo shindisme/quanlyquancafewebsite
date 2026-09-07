@@ -27,7 +27,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const TTL_MS = 4 * 60 * 60 * 1000; // 4 hours
+const TTL_MS = 4 * 60 * 60 * 1000; // 4h
 
 function getDeviceId(): string {
   let id = localStorage.getItem('cafe_device_id');

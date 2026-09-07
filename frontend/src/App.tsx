@@ -1,13 +1,3 @@
-/**
- * App.tsx — Root routing configuration
- *
- * THAY ĐỔI:
- * - /admin/login → /login (chung cho admin + staff)
- * - Thêm /staff/* routes cho StaffLayout
- * - /admin/login redirect về /login (backward compatible)
- * - Thêm trang InvoiceManage cho admin
- */
-
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -50,19 +40,15 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* ── Login (chung) ──────────────────────────── */}
           <Route path="/login" element={<Login />} />
-          {/* Backward compatible — redirect old login URL */}
           <Route path="/admin/login" element={<Navigate to="/login" replace />} />
 
-          {/* ── Public routes (khách quét QR) ──────────── */}
           <Route path="/table/:tableCode" element={<PublicLayout />}>
             <Route index element={<MenuPage />} />
             <Route path="checkout" element={<CheckoutPage />} />
             <Route path="tracking" element={<TrackingPage />} />
           </Route>
 
-          {/* ── Admin routes ──────────────────────────── */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
@@ -83,7 +69,6 @@ function App() {
             <Route path="profile" element={<ProfilePage />} />
           </Route>
 
-          {/* ── Staff routes ──────────────────────────── */}
           <Route path="/staff" element={<StaffLayout />}>
             <Route index element={<Navigate to="pos" replace />} />
             <Route path="pos" element={<POSPage />} />
@@ -93,16 +78,13 @@ function App() {
             <Route path="profile" element={<ProfilePage />} />
           </Route>
 
-          {/* ── Root ──────────────────────────────────── */}
           <Route path="/" element={
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               height: '100vh', background: '#faf8f5', fontFamily: 'var(--admin-font)',
             }}>
               <div style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: 48, marginBottom: 12 }}>☕</p>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#292018' }}>Quán Cafe</h2>
-                <p style={{ color: '#a8a29e', marginTop: 8, fontSize: 14 }}>Quét mã QR trên bàn để đặt món</p>
+                <p style={{ color: '#a8a29e', marginTop: 8, fontSize: 24 }}>Vui lòng quét mã QR trên bàn để đặt món</p>
               </div>
             </div>
           } />

@@ -20,7 +20,20 @@ export const authService = {
       throw { statusCode: 401, message: 'Sai tài khoản hoặc mật khẩu' } as AppError;
     }
 
-    const isMatch = await bcrypt.compare(pass, user.password);
+    let isMatch = false;
+    if (user.password.startsWith('$2')) {
+      isMatch = await bcrypt.compare(pass, user.password);
+    } else {
+      isMatch = pass === user.password;
+      if (isMatch) {
+        const hashedPassword = await bcrypt.hash(pass, 10);
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { password: hashedPassword }
+        });
+      }
+    }
+
     if (!isMatch) {
       throw { statusCode: 401, message: 'Sai tài khoản hoặc mật khẩu' } as AppError;
     }

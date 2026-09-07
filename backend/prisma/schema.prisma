@@ -28,8 +28,8 @@ enum InvoiceStatus {
 enum OrderStatus {
   PENDING // Chờ xác nhận 
   CONFIRMED // Đã xác nhận
-  COMPLETED // Đã xong
-  CANCELLED // Huỷ lần gọi này
+  COMPLETED
+  CANCELLED
 }
 
 enum DiscountType {
