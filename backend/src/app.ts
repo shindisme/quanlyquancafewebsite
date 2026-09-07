@@ -11,7 +11,6 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// Normalize URL for Vercel serverless rewrites
 app.use((req, _res, next) => {
     if (req.originalUrl && req.url !== req.originalUrl) {
         req.url = req.originalUrl;
