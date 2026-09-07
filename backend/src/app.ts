@@ -19,10 +19,7 @@ app.use((req, _res, next) => {
 });
 
 app.use('/api/v1', routes);
-
-app.get('/', (req, res) => {
-    res.redirect('/api/v1')
-})
+app.use('/', routes);
 
 // handle routes ko tồn tại
 app.use(notFoundHandler);
