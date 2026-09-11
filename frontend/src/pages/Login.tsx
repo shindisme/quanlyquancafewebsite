@@ -184,9 +184,9 @@ const Login = () => {
               </button>
             </div>
             <div>
-              <p style={{ fontSize: 14, fontWeight: 700 }}>Tài khoản demo:</p>
-              <p style={{ fontSize: 12 }}>Tên đăng nhập: admin</p>
-              <p style={{ fontSize: 12 }}>Mật khẩu: 123123</p>
+              <p style={{ fontSize: 14, fontWeight: 700 }}>Tài khoản demo (mật khẩu: <strong>123123</strong>):</p>
+              <p style={{ fontSize: 12 }}>• Admin:  <strong>admin</strong></p>
+              <p style={{ fontSize: 12 }}>• Nhân viên:  <strong>staff1</strong></p>
             </div>
             <button
               type="submit"
