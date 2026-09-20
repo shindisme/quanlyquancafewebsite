@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import productService from '../../../services/productService';
 import categoryService from '../../../services/categoryService';
+import toppingGroupService from '../../../services/toppingGroupService';
 import { useFetch } from '../../../hooks/useFetch';
 import PageHeader from '../../../components/Admin/ui/PageHeader';
 import Pagination from '../../../components/Admin/ui/Pagination';
@@ -16,6 +17,7 @@ const ProductManage = () => {
   const [page, setPage] = useState(1);
   const { data, meta, loading, refetch } = useFetch(productService, { page, limit: 10 });
   const { data: categories } = useFetch(categoryService);
+  const { data: toppingGroups } = useFetch(toppingGroupService);
 
   const [formOpen, setFormOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -105,7 +107,7 @@ const ProductManage = () => {
         </>
       )}
 
-      <ProductFormModal isOpen={formOpen} onClose={() => setFormOpen(false)} onSubmit={handleSubmit} initialData={selected} categories={categories} />
+      <ProductFormModal isOpen={formOpen} onClose={() => setFormOpen(false)} onSubmit={handleSubmit} initialData={selected} categories={categories} toppingGroups={toppingGroups} />
       <ConfirmDeleteModal isOpen={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={handleDelete} itemName={selected?.name ?? ''} loading={deleting} />
       <ExportConfirmModal isOpen={exportOpen} onClose={() => setExportOpen(false)} onConfirm={handleExport} count={filtered.length} />
     </div>

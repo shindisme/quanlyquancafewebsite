@@ -6,7 +6,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   product: any;
-  toppings: any[];
+  toppings?: any[];
   onConfirm: (item: {
     product: any; size?: any; quantity: number; price: number;
     toppings: { toppingId: string; price: number; name: string }[];
@@ -14,9 +14,11 @@ interface Props {
   }) => void;
 }
 
-const POSProductModal = ({ isOpen, onClose, product, toppings, onConfirm }: Props) => {
+const POSProductModal = ({ isOpen, onClose, product, toppings = [], onConfirm }: Props) => {
   const sizes = product?.sizes || [];
-  const categoryToppings = toppings.filter((t: any) => t.categoryId === product?.categoryId);
+  // Lấy danh sách topping từ nhóm topping của sản phẩm (hoặc fallback tìm theo toppingGroupId)
+  const availableToppings: any[] = product?.toppingGroup?.toppings ||
+    (product?.toppingGroupId ? toppings.filter((t: any) => t.groups?.some((g: any) => g.id === product.toppingGroupId)) : []);
 
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
@@ -40,7 +42,7 @@ const POSProductModal = ({ isOpen, onClose, product, toppings, onConfirm }: Prop
     );
   };
 
-  const toppingTotal = categoryToppings
+  const toppingTotal = availableToppings
     .filter((t: any) => selectedToppings.includes(t.id))
     .reduce((s: number, t: any) => s + t.price, 0);
 
@@ -53,7 +55,7 @@ const POSProductModal = ({ isOpen, onClose, product, toppings, onConfirm }: Prop
       size: selectedSize,
       quantity,
       price: product.price + (selectedSize?.extraPrice || 0),
-      toppings: categoryToppings
+      toppings: availableToppings
         .filter((t: any) => selectedToppings.includes(t.id))
         .map((t: any) => ({ toppingId: t.id, name: t.name, price: t.price })),
       note: note.trim() || undefined,
@@ -116,12 +118,19 @@ const POSProductModal = ({ isOpen, onClose, product, toppings, onConfirm }: Prop
             </div>
           )}
 
-          {/* Toppings */}
-          {categoryToppings.length > 0 && (
+          {/* Toppings - Chỉ hiển thị nếu sản phẩm thuộc nhóm topping và nhóm đó có topping */}
+          {availableToppings.length > 0 && (
             <div style={{ marginTop: 20 }}>
-              <p style={{ fontSize: 14, fontWeight: 700, color: '#292018', marginBottom: 10 }}>Topping</p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#292018' }}>Topping</p>
+                {product?.toppingGroup?.name && (
+                  <span style={{ fontSize: 11, color: '#b45309', background: '#fef3c7', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
+                    {product.toppingGroup.name}
+                  </span>
+                )}
+              </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {categoryToppings.map((t: any) => (
+                {availableToppings.map((t: any) => (
                   <label key={t.id} onClick={() => toggleTopping(t.id)} style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '10px 14px', borderRadius: 12, cursor: 'pointer',

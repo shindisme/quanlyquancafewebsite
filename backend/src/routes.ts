@@ -11,6 +11,7 @@ import paymentRoutes from './modules/payment/payment.route.js';
 import couponRoutes from './modules/coupon/coupon.route.js';
 import uploadRoutes from './modules/upload/upload.route.js';
 import toppingRoutes from './modules/topping/topping.route.js';
+import toppingGroupRoutes from './modules/topping-group/topping-group.route.js';
 import dashboardRoutes from './modules/dashboard/dashboard.route.js';
 
 const router = Router();
@@ -33,6 +34,7 @@ router.use('/payments', paymentRoutes);
 router.use('/coupons', couponRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/toppings', toppingRoutes);
+router.use('/topping-groups', toppingGroupRoutes);
 router.use('/dashboard', dashboardRoutes);
 
 export default router;

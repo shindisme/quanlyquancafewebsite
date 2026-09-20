@@ -8,6 +8,7 @@ export interface SizeInput {
 export interface ProductInput {
   name: string;
   categoryId: string;
+  toppingGroupId?: string | null;
   price: number;
   description?: string;
   image?: string;

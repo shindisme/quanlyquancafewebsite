@@ -10,21 +10,22 @@ const paramsSchema = z.object({
 const createToppingSchema = z.object({
     name: z.string().min(1, 'Tên topping không được để trống').max(50, 'Tên topping tối đa 50 ký tự').trim(),
     price: z.number().int('Giá phải là số nguyên').min(1, 'Giá topping phải lớn hơn 0').max(1000000, 'Giá topping tối đa 1.000.000đ'),
-    categoryId: z.string().uuid('Danh mục không hợp lệ')
+    isActive: z.boolean().optional(),
+    groupIds: z.array(z.string().uuid('Group ID không hợp lệ')).optional()
 });
 
 const updateToppingSchema = z.object({
     name: z.string().min(1, 'Tên topping không được để trống').max(50, 'Tên topping tối đa 50 ký tự').trim().optional(),
     price: z.number().int('Giá phải là số nguyên').min(1, 'Giá topping phải lớn hơn 0').max(1000000, 'Giá topping tối đa 1.000.000đ').optional(),
-    categoryId: z.string().uuid('Danh mục không hợp lệ').optional()
+    isActive: z.boolean().optional(),
+    groupIds: z.array(z.string().uuid('Group ID không hợp lệ')).optional()
 });
-
 
 export const toppingController = {
     async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            const tables = await toppingService.getAll();
-            res.status(200).json({ status: 'success', data: tables });
+            const toppings = await toppingService.getAll();
+            res.status(200).json({ status: 'success', data: toppings });
         } catch (error) {
             next(error);
         }
@@ -33,9 +34,9 @@ export const toppingController = {
     async getById(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = paramsSchema.parse(req.params);
-            const table = await toppingService.getById(id);
-            if (!table) throw { statusCode: 404, message: 'Không tìm thấy topping' } as AppError;
-            res.status(200).json({ status: 'success', data: table });
+            const topping = await toppingService.getById(id);
+            if (!topping) throw { statusCode: 404, message: 'Không tìm thấy topping' } as AppError;
+            res.status(200).json({ status: 'success', data: topping });
         } catch (error) {
             next(error);
         }
@@ -44,8 +45,8 @@ export const toppingController = {
     async create(req: Request, res: Response, next: NextFunction) {
         try {
             const data = createToppingSchema.parse(req.body);
-            const newTable = await toppingService.create(data);
-            res.status(201).json({ status: 'success', data: newTable });
+            const newTopping = await toppingService.create(data);
+            res.status(201).json({ status: 'success', data: newTopping });
         } catch (error) {
             next(error);
         }

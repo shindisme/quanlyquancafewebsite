@@ -128,46 +128,107 @@ async function main() {
   }
   console.log(`✅ Đã seed ${Object.keys(createdCategories).length} danh mục.`);
 
-  // 5. SEED TOPPING THEO DANH MỤC
-  console.log('🧋 Đang tạo Topping cho từng danh mục...');
-  const toppingsData = [
-    // Cho Cà Phê
-    { categoryId: createdCategories['Cà Phê & Bạc Xỉu'].id, name: 'Thạch Cà Phê', price: 6000 },
-    { categoryId: createdCategories['Cà Phê & Bạc Xỉu'].id, name: 'Shot Espresso Thêm', price: 10000 },
-    { categoryId: createdCategories['Cà Phê & Bạc Xỉu'].id, name: 'Kem Béo Cốt Dừa', price: 8000 },
-    // Cho Trà Sữa & Trà Trái Cây
-    { categoryId: createdCategories['Trà Sữa & Trà Trái Cây'].id, name: 'Trân Châu Đen Hoàng Gia', price: 8000 },
-    { categoryId: createdCategories['Trà Sữa & Trà Trái Cây'].id, name: 'Trân Châu Trắng 3Q', price: 10000 },
-    { categoryId: createdCategories['Trà Sữa & Trà Trái Cây'].id, name: 'Thạch Nha Đam Đào', price: 8000 },
-    { categoryId: createdCategories['Trà Sữa & Trà Trái Cây'].id, name: 'Kem Cheese Macchiato', price: 12000 },
-    { categoryId: createdCategories['Trà Sữa & Trà Trái Cây'].id, name: 'Pudding Trứng Vàng', price: 9000 },
-    // Cho Đá Xay & Sinh Tố
-    { categoryId: createdCategories['Đá Xay & Sinh Tố'].id, name: 'Kem Tươi Whipping', price: 10000 },
-    { categoryId: createdCategories['Đá Xay & Sinh Tố'].id, name: 'Sốt Caramel Béo', price: 6000 },
+  // 5. SEED TOPPING (MASTER LIST) & TOPPING GROUPS (N - N)
+  console.log('🧋 Đang tạo danh mục Topping độc lập...');
+  const toppingsMasterData = [
+    // Topping Cà phê
+    { name: 'Thạch Cà Phê', price: 6000 },
+    { name: 'Shot Espresso Thêm', price: 10000 },
+    { name: 'Kem Béo Cốt Dừa', price: 8000 },
+    // Topping Trà & Trà sữa
+    { name: 'Trân Châu Đen Hoàng Gia', price: 8000 },
+    { name: 'Trân Châu Trắng 3Q', price: 10000 },
+    { name: 'Thạch Nha Đam Đào', price: 8000 },
+    { name: 'Kem Cheese Macchiato', price: 12000 },
+    { name: 'Pudding Trứng Vàng', price: 9000 },
+    // Topping Đá Xay
+    { name: 'Kem Tươi Whipping', price: 10000 },
+    { name: 'Sốt Caramel Béo', price: 6000 },
   ];
 
   const createdToppings: Record<string, any> = {};
-  for (const top of toppingsData) {
+  for (const top of toppingsMasterData) {
     const topping = await prisma.topping.upsert({
-      where: {
-        categoryId_name: {
-          categoryId: top.categoryId,
-          name: top.name,
-        },
-      },
-      update: { price: top.price, isActive: true },
+      where: { name: top.name },
+      update: { price: top.price, isActive: true, deletedAt: null },
       create: top,
     });
     createdToppings[top.name] = topping;
   }
-  console.log(`✅ Đã seed ${Object.keys(createdToppings).length} loại topping.`);
+  console.log(`✅ Đã seed ${Object.keys(createdToppings).length} loại topping độc lập.`);
+
+  console.log('🗂️ Đang tạo Nhóm Topping (ToppingGroup) và liên kết N - N...');
+  const toppingGroupsData = [
+    {
+      name: 'Topping Trà Sữa',
+      description: 'Dành cho các dòng Trà Sữa truyền thống và hiện đại',
+      toppings: [
+        'Trân Châu Đen Hoàng Gia',
+        'Trân Châu Trắng 3Q',
+        'Thạch Nha Đam Đào',
+        'Kem Cheese Macchiato',
+        'Pudding Trứng Vàng',
+      ],
+    },
+    {
+      name: 'Topping Trà Trái Cây',
+      description: 'Dành cho các dòng Trà Trái Cây thanh mát (dùng chung Trân châu trắng, Nha đam, Kem cheese)',
+      toppings: [
+        'Trân Châu Trắng 3Q',
+        'Thạch Nha Đam Đào',
+        'Kem Cheese Macchiato',
+      ],
+    },
+    {
+      name: 'Topping Cà Phê',
+      description: 'Dành cho các món Cà phê pha phin và Espresso',
+      toppings: [
+        'Thạch Cà Phê',
+        'Shot Espresso Thêm',
+        'Kem Béo Cốt Dừa',
+      ],
+    },
+    {
+      name: 'Topping Đá Xay & Sinh Tố',
+      description: 'Dành cho Frappuccino, Sinh tố và Đá xay',
+      toppings: [
+        'Kem Tươi Whipping',
+        'Sốt Caramel Béo',
+        'Thạch Cà Phê',
+      ],
+    },
+  ];
+
+  const createdToppingGroups: Record<string, any> = {};
+  for (const group of toppingGroupsData) {
+    const tg = await prisma.toppingGroup.upsert({
+      where: { name: group.name },
+      update: {
+        description: group.description,
+        deletedAt: null,
+        toppings: {
+          set: group.toppings.map(tName => ({ id: createdToppings[tName].id })),
+        },
+      },
+      create: {
+        name: group.name,
+        description: group.description,
+        toppings: {
+          connect: group.toppings.map(tName => ({ id: createdToppings[tName].id })),
+        },
+      },
+    });
+    createdToppingGroups[group.name] = tg;
+  }
+  console.log(`✅ Đã seed ${Object.keys(createdToppingGroups).length} nhóm topping.`);
 
   // 6. SEED SẢN PHẨM & SIZES
-  console.log('☕ Đang tạo sản phẩm và cấu hình size...');
+  console.log('☕ Đang tạo sản phẩm và cấu hình size & nhóm topping...');
   const productsData = [
     // Cà phê
     {
       categoryId: createdCategories['Cà Phê & Bạc Xỉu'].id,
+      toppingGroupId: null, // Cà phê đen nguyên bản - không cần topping
       name: 'Cà Phê Đen Đá',
       price: 25000,
       description: 'Cà phê Robusta mộc pha phin đậm đà chuẩn vị truyền thống.',
@@ -179,6 +240,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Cà Phê & Bạc Xỉu'].id,
+      toppingGroupId: createdToppingGroups['Topping Cà Phê'].id,
       name: 'Cà Phê Sữa Đá Sài Gòn',
       price: 29000,
       description: 'Hương vị cà phê nồng nàn quyện cùng sữa đặc béo ngậy.',
@@ -190,6 +252,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Cà Phê & Bạc Xỉu'].id,
+      toppingGroupId: createdToppingGroups['Topping Cà Phê'].id,
       name: 'Bạc Xỉu 3 Tầng Thơm Ngậy',
       price: 35000,
       description: 'Sự kết hợp tinh tế giữa lớp sữa tươi, sữa đặc và cà phê sánh mịn.',
@@ -201,6 +264,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Cà Phê & Bạc Xỉu'].id,
+      toppingGroupId: createdToppingGroups['Topping Cà Phê'].id,
       name: 'Cà Phê Muối Kem Béo',
       price: 35000,
       description: 'Vị cà phê hòa quyện cùng lớp kem muối mặn mà độc đáo khó quên.',
@@ -213,6 +277,7 @@ async function main() {
     // Trà Sữa & Trà Trái Cây
     {
       categoryId: createdCategories['Trà Sữa & Trà Trái Cây'].id,
+      toppingGroupId: createdToppingGroups['Topping Trà Trái Cây'].id,
       name: 'Trà Đào Cam Sả Tươi',
       price: 39000,
       description: 'Hương thơm nồng ấm từ sả, vị thanh mát từ đào giòn và cam tươi mọng nước.',
@@ -224,6 +289,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Trà Sữa & Trà Trái Cây'].id,
+      toppingGroupId: createdToppingGroups['Topping Trà Trái Cây'].id,
       name: 'Trà Vải Hoa Hồng Hoàng Gia',
       price: 42000,
       description: 'Vị ngọt thanh dịu mát từ trái vải kết hợp cùng hương thơm hoa hồng tinh khiết.',
@@ -235,6 +301,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Trà Sữa & Trà Trái Cây'].id,
+      toppingGroupId: createdToppingGroups['Topping Trà Sữa'].id,
       name: 'Trà Sữa Oolong Nướng',
       price: 40000,
       description: 'Trà Oolong ủ hương nướng thơm đậm đà hòa cùng sữa tươi béo thơm chuẩn vị Đài Loan.',
@@ -247,6 +314,7 @@ async function main() {
     // Đá Xay & Sinh Tố
     {
       categoryId: createdCategories['Đá Xay & Sinh Tố'].id,
+      toppingGroupId: createdToppingGroups['Topping Đá Xay & Sinh Tố'].id,
       name: 'Matcha Đá Xay Kem Tuyết',
       price: 48000,
       description: 'Bột trà xanh Uji Nhật Bản nguyên chất xay mịn phủ lớp kem whipping mát lạnh.',
@@ -258,6 +326,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Đá Xay & Sinh Tố'].id,
+      toppingGroupId: createdToppingGroups['Topping Đá Xay & Sinh Tố'].id,
       name: 'Cà Phê Cốt Dừa Đá Xay',
       price: 49000,
       description: 'Cốt dừa Bến Tre thơm béo xay tuyết mịn rưới cà phê espresso hảo hạng.',
@@ -269,6 +338,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Đá Xay & Sinh Tố'].id,
+      toppingGroupId: createdToppingGroups['Topping Đá Xay & Sinh Tố'].id,
       name: 'Sinh Tố Bơ Sáp Đắk Lắk',
       price: 45000,
       description: 'Bơ sáp loại 1 dẻo quánh xay cùng sữa tươi tạo nên thức uống dinh dưỡng tuyệt vời.',
@@ -278,9 +348,10 @@ async function main() {
         { sizeName: 'L', extraPrice: 7000 },
       ],
     },
-    // Bánh Ngọt
+    // Bánh Ngọt - Không dùng Topping
     {
       categoryId: createdCategories['Bánh Ngọt & Tráng Miệng'].id,
+      toppingGroupId: null,
       name: 'Bánh Tiramisu Ý Truyền Thống',
       price: 38000,
       description: 'Bánh mềm tan đượm hương cà phê và phô mai mascarpone béo ngậy.',
@@ -289,6 +360,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Bánh Ngọt & Tráng Miệng'].id,
+      toppingGroupId: null,
       name: 'Bánh Cheesecake Chanh Dây',
       price: 42000,
       description: 'Đế bánh quy giòn thơm, lớp phô mai béo mịn kết hợp sốt chanh dây chua ngọt hài hòa.',
@@ -297,6 +369,7 @@ async function main() {
     },
     {
       categoryId: createdCategories['Bánh Ngọt & Tráng Miệng'].id,
+      toppingGroupId: null,
       name: 'Bánh Croissant Bơ Tỏi Nướng',
       price: 28000,
       description: 'Bánh sừng bò ngàn lớp nướng vàng ruộm, thơm lừng bơ Pháp và tỏi thơm.',
@@ -317,6 +390,7 @@ async function main() {
       product = await prisma.product.create({
         data: {
           categoryId: p.categoryId,
+          toppingGroupId: p.toppingGroupId,
           name: p.name,
           price: p.price,
           description: p.description,
@@ -324,11 +398,18 @@ async function main() {
           isAvailable: true,
         },
       });
+    } else {
+      product = await prisma.product.update({
+        where: { id: product.id },
+        data: {
+          toppingGroupId: p.toppingGroupId,
+          price: p.price,
+        },
+      });
     }
 
     createdProducts[p.name] = product;
     createdSizes[p.name] = {};
-
     for (const s of p.sizes) {
       const size = await prisma.size.upsert({
         where: {

@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -88,26 +83,28 @@ model Category {
   deletedAt DateTime?
 
   products Product[]
-  toppings Topping[]
 }
 
 model Product {
-  id          String  @id @default(uuid())
-  categoryId  String
-  name        String
-  price       Int
-  description String?
-  image       String?
+  id             String  @id @default(uuid())
+  categoryId     String
+  toppingGroupId String?
+  name           String
+  price          Int
+  description    String?
+  image          String?
 
   isAvailable Boolean   @default(true)
   deletedAt   DateTime?
 
-  category Category @relation(fields: [categoryId], references: [id])
+  category     Category      @relation(fields: [categoryId], references: [id])
+  toppingGroup ToppingGroup? @relation(fields: [toppingGroupId], references: [id])
 
   sizes        Size[]
   orderDetails OrderDetail[]
 
   @@index([categoryId])
+  @@index([toppingGroupId])
 }
 
 model Size {
@@ -123,19 +120,27 @@ model Size {
   @@unique([productId, sizeName])
 }
 
+model ToppingGroup {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  toppings Topping[]
+  products Product[]
+}
+
 model Topping {
-  id         String    @id @default(uuid())
-  categoryId String
-  name       String
-  price      Int
-  isActive   Boolean   @default(true)
-  deletedAt  DateTime?
+  id        String    @id @default(uuid())
+  name      String    @unique
+  price     Int
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
 
-  category Category @relation(fields: [categoryId], references: [id])
-
+  groups               ToppingGroup[]
   orderDetailsToppings OrderDetailTopping[]
-
-  @@unique([categoryId, name])
 }
 
 model Coupon {

@@ -48,18 +48,16 @@ export const categoryService = {
 
     async deleteCategory(id: string) {
         const productCount = await prisma.product.count({ where: { categoryId: id, deletedAt: null } });
-        const toppingCount = await prisma.topping.count({ where: { categoryId: id, deletedAt: null } });
 
-        if (productCount > 0 || toppingCount > 0) {
+        if (productCount > 0) {
             throw {
                 statusCode: 400,
-                message: `Không thể xoá danh mục đang có ${productCount > 0 ? productCount + ' sản phẩm' : ''}${productCount > 0 && toppingCount > 0 ? ' và ' : ''}${toppingCount > 0 ? toppingCount + ' topping' : ''} hoạt động`
+                message: `Không thể xoá danh mục đang có ${productCount} sản phẩm hoạt động`
             };
         }
 
-        // Kiểm tra có sản phẩm/topping đã soft delete
-        const totalCount = await prisma.product.count({ where: { categoryId: id } }) +
-            await prisma.topping.count({ where: { categoryId: id } });
+        // Kiểm tra có sản phẩm đã soft delete
+        const totalCount = await prisma.product.count({ where: { categoryId: id } });
         if (totalCount === 0) {
             return await prisma.category.delete({ where: { id } });
         } else {

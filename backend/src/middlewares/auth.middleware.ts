@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { AppError } from './error.middleware.js';
+import type { JwtAuthPayload, Role } from '../types/auth.type.js';
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -13,18 +14,25 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     return next({ statusCode: 401, message: 'Token không hợp lệ' } as AppError);
   }
 
-  const secret = process.env.JWT_SECRET || 'secretkey@2004';
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET chưa được cấu hình!');
+  }
 
   try {
-    const payload = jwt.verify(token, secret);
-    req.user = payload as any;
+    const payload = jwt.verify(token, secret) as unknown as JwtAuthPayload;
+    req.user = {
+      id: payload.id,
+      username: payload.username,
+      role: payload.role,
+    };
     next();
   } catch (error) {
     return next({ statusCode: 401, message: 'Token không hợp lệ hoặc đã hết hạn' } as AppError);
   }
 };
 
-export const authorize = (roles: string[]) => {
+export const authorize = (roles: Role[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const userRole = req.user?.role;
     if (!userRole || !roles.includes(userRole)) {

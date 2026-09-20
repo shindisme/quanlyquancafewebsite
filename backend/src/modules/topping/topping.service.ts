@@ -6,35 +6,51 @@ export const toppingService = {
         return await prisma.topping.findMany({
             where: { deletedAt: null },
             orderBy: { name: 'asc' },
-            include: { category: true }
+            include: { groups: true }
         });
     },
 
     async getById(id: string) {
         return await prisma.topping.findUnique({
             where: { id, deletedAt: null },
-            include: { category: true }
+            include: { groups: true }
         });
     },
 
-    async create(data: { name: string; price: number; categoryId: string }) {
+    async create(data: { name: string; price: number; isActive?: boolean; groupIds?: string[] }) {
+        const { groupIds, ...rest } = data;
         return await prisma.topping.create({
             data: {
                 id: uuidv7(),
-                ...data
+                name: rest.name,
+                price: rest.price,
+                isActive: rest.isActive ?? true,
+                groups: groupIds && groupIds.length > 0 ? {
+                    connect: groupIds.map(gid => ({ id: gid }))
+                } : undefined
             },
+            include: { groups: true }
         });
     },
 
     async update(id: string, data: {
-        name?: string | undefined;
-        price?: number | undefined;
-        categoryId?: string | undefined
+        name?: string;
+        price?: number;
+        isActive?: boolean;
+        groupIds?: string[];
     }) {
+        const { groupIds, ...rest } = data;
         return await prisma.topping.update({
             where: { id },
-            data: JSON.parse(JSON.stringify(data)),
-            include: { category: true }
+            data: {
+                name: rest.name,
+                price: rest.price,
+                isActive: rest.isActive,
+                groups: groupIds ? {
+                    set: groupIds.map(gid => ({ id: gid }))
+                } : undefined
+            },
+            include: { groups: true }
         });
     },
 

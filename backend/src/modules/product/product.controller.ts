@@ -4,12 +4,13 @@ import { AppError } from '../../middlewares/error.middleware.js';
 import { z } from 'zod';
 
 const paramsSchema = z.object({
-    id: z.string().uuid('id không hợp lệ')
+    id: z.uuid('id không hợp lệ')
 })
 
 const createProductSchema = z.object({
     name: z.string().min(1, 'Tên sản phẩm không được để trống').max(100, 'Tên sản phẩm tối đa 100 ký tự').trim(),
-    categoryId: z.string().uuid('Danh mục không hợp lệ'),
+    categoryId: z.uuid('Danh mục không hợp lệ'),
+    toppingGroupId: z.uuid('Nhóm Topping không hợp lệ').nullable().optional(),
     price: z.number().int('Giá phải là số nguyên').positive('Giá phải là số nguyên dương').max(10000000, 'Giá không được vượt quá 10.000.000đ'),
     description: z.string().max(500, 'Mô tả tối đa 500 ký tự').optional(),
     image: z.string().url('URL hình ảnh không hợp lệ').optional().or(z.literal('')),

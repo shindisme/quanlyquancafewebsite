@@ -10,7 +10,15 @@ export const productService = {
                 orderBy: { name: 'asc' },
                 include: {
                     category: true,
-                    sizes: true
+                    sizes: true,
+                    toppingGroup: {
+                        include: {
+                            toppings: {
+                                where: { deletedAt: null, isActive: true },
+                                orderBy: { name: 'asc' }
+                            }
+                        }
+                    }
                 },
                 skip,
                 take: limit
@@ -31,7 +39,15 @@ export const productService = {
             where: { id, deletedAt: null },
             include: {
                 category: true,
-                sizes: true
+                sizes: true,
+                toppingGroup: {
+                    include: {
+                        toppings: {
+                            where: { deletedAt: null, isActive: true },
+                            orderBy: { name: 'asc' }
+                        }
+                    }
+                }
             }
         });
     },
@@ -39,6 +55,7 @@ export const productService = {
     async create(
         data: {
             categoryId: string;
+            toppingGroupId?: string | null;
             name: string;
             price: number;
             description?: string;
@@ -55,7 +72,8 @@ export const productService = {
                 description: rest.description || null,
                 image: rest.image || null,
                 isAvailable: rest.isActive ?? true,
-                category: { connect: { id: rest.categoryId } },
+                categoryId: rest.categoryId,
+                toppingGroupId: rest.toppingGroupId || null,
                 sizes: sizes ? {
                     create: sizes.map(s => ({
                         sizeName: s.sizeName,
@@ -63,13 +81,24 @@ export const productService = {
                     }))
                 } : undefined
             },
-            include: { category: true, sizes: true }
+            include: {
+                category: true,
+                sizes: true,
+                toppingGroup: {
+                    include: {
+                        toppings: {
+                            where: { deletedAt: null, isActive: true }
+                        }
+                    }
+                }
+            }
         });
     },
 
     async update(id: string, data: {
         name?: string;
         categoryId?: string;
+        toppingGroupId?: string | null;
         price?: number;
         description?: string;
         image?: string;
@@ -100,9 +129,20 @@ export const productService = {
                     description: rest.description === undefined ? undefined : (rest.description || null),
                     image: rest.image === undefined ? undefined : (rest.image || null),
                     isAvailable: rest.isActive,
-                    categoryId: rest.categoryId
+                    categoryId: rest.categoryId,
+                    toppingGroupId: rest.toppingGroupId === undefined ? undefined : (rest.toppingGroupId || null)
                 },
-                include: { category: true, sizes: true }
+                include: {
+                    category: true,
+                    sizes: true,
+                    toppingGroup: {
+                        include: {
+                            toppings: {
+                                where: { deletedAt: null, isActive: true }
+                            }
+                        }
+                    }
+                }
             });
         });
     },

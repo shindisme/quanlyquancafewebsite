@@ -8,6 +8,7 @@ interface Product {
   image?: string;
   isAvailable: boolean;
   category?: { name: string };
+  toppingGroup?: { name: string };
   sizes?: { sizeName: string; extraPrice: number }[];
 }
 
@@ -35,7 +36,21 @@ const columns: Column<Product>[] = [
       </div>
     ),
   },
-  { key: 'category', label: 'Danh mục', render: (item) => <span className="text-slate-500">{item.category?.name ?? '—'}</span> },
+  {
+    key: 'category', label: 'Danh mục & Topping',
+    render: (item) => (
+      <div>
+        <span className="text-slate-700 font-medium">{item.category?.name ?? '—'}</span>
+        {item.toppingGroup && (
+          <div className="mt-0.5">
+            <span className="inline-block text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-medium border border-amber-200">
+              +{item.toppingGroup.name}
+            </span>
+          </div>
+        )}
+      </div>
+    ),
+  },
   { key: 'price', label: 'Giá', align: 'right', render: (item) => <span className="font-semibold text-slate-700">{fmt(item.price)}</span> },
   {
     key: 'isAvailable', label: 'Trạng thái', align: 'center',

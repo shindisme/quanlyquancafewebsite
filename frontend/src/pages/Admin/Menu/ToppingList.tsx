@@ -1,12 +1,12 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import DataTable, { type Column } from '../../../components/Admin/ui/DataTable';
 
-interface Topping {
+export interface Topping {
   id: string;
   name: string;
   price: number;
   isActive: boolean;
-  category?: { name: string };
+  groups?: { id: string; name: string }[];
 }
 
 interface Props {
@@ -17,7 +17,26 @@ interface Props {
 
 const columns: Column<Topping>[] = [
   { key: 'name', label: 'Tên topping', render: (item) => <span className="font-semibold text-slate-800">{item.name}</span> },
-  { key: 'category', label: 'Danh mục', render: (item) => <span className="text-slate-500">{item.category?.name ?? '—'}</span> },
+  {
+    key: 'groups',
+    label: 'Thuộc nhóm Topping',
+    render: (item) => (
+      <div className="flex flex-wrap gap-1">
+        {item.groups && item.groups.length > 0 ? (
+          item.groups.map((g) => (
+            <span
+              key={g.id}
+              className="inline-block text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-medium"
+            >
+              {g.name}
+            </span>
+          ))
+        ) : (
+          <span className="text-slate-400 text-xs italic">Chưa phân nhóm</span>
+        )}
+      </div>
+    ),
+  },
   { key: 'price', label: 'Giá', align: 'right', render: (item) => <span className="font-semibold text-slate-700">{item.price.toLocaleString('vi-VN')}đ</span> },
   {
     key: 'isActive', label: 'Trạng thái', align: 'center',
