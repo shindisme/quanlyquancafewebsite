@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { dashboardController } from './dashboard.controller.js';
-import { authenticate } from '../../middlewares/auth.middleware.js';
+import { authenticate, authorize } from '../../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.get('/stats', authenticate, dashboardController.getStats);
+// Quan tri vien xem thong ke bao cao doanh thu
+router.get('/stats', authenticate, authorize('ADMIN'), dashboardController.getStats);
 
 export default router;

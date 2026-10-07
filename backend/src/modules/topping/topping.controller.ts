@@ -4,21 +4,21 @@ import { AppError } from '../../middlewares/error.middleware.js';
 import { z } from 'zod';
 
 const paramsSchema = z.object({
-    id: z.string().uuid('id không hợp lệ')
+    id: z.uuid('id không hợp lệ')
 });
 
 const createToppingSchema = z.object({
     name: z.string().min(1, 'Tên topping không được để trống').max(50, 'Tên topping tối đa 50 ký tự').trim(),
     price: z.number().int('Giá phải là số nguyên').min(1, 'Giá topping phải lớn hơn 0').max(1000000, 'Giá topping tối đa 1.000.000đ'),
     isActive: z.boolean().optional(),
-    groupIds: z.array(z.string().uuid('Group ID không hợp lệ')).optional()
+    groupIds: z.array(z.uuid('Group ID không hợp lệ')).optional()
 });
 
 const updateToppingSchema = z.object({
     name: z.string().min(1, 'Tên topping không được để trống').max(50, 'Tên topping tối đa 50 ký tự').trim().optional(),
     price: z.number().int('Giá phải là số nguyên').min(1, 'Giá topping phải lớn hơn 0').max(1000000, 'Giá topping tối đa 1.000.000đ').optional(),
     isActive: z.boolean().optional(),
-    groupIds: z.array(z.string().uuid('Group ID không hợp lệ')).optional()
+    groupIds: z.array(z.uuid('Group ID không hợp lệ')).optional()
 });
 
 export const toppingController = {
@@ -35,7 +35,7 @@ export const toppingController = {
         try {
             const { id } = paramsSchema.parse(req.params);
             const topping = await toppingService.getById(id);
-            if (!topping) throw { statusCode: 404, message: 'Không tìm thấy topping' } as AppError;
+            if (!topping) throw new AppError(404, 'Không tìm thấy topping');
             res.status(200).json({ status: 'success', data: topping });
         } catch (error) {
             next(error);

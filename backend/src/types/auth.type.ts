@@ -1,24 +1,18 @@
+import { z } from 'zod';
 import { UserRole } from '../generated/prisma/index.js';
 
-/**
- * Union type kết hợp Enum từ Prisma: 'ADMIN' | 'STAFF'
- * Giúp autocomplete chuẩn xác và tránh lỗi chính tả
- */
-export type Role = UserRole | 'ADMIN' | 'STAFF';
 
-/**
- * Thông tin người dùng được lưu trong req.user sau khi xác thực
- */
-export interface AuthUser {
-  id: string;
-  username: string;
-  role: Role;
-}
+export const roleSchema = z.enum(['ADMIN', 'STAFF']);
+export type Role = UserRole | z.infer<typeof roleSchema>;
 
-/**
- * Payload chứa trong JWT Token
- */
-export interface JwtAuthPayload extends AuthUser {
-  iat?: number;
-  exp?: number;
-}
+export const jwtAuthPayloadSchema = z.object({
+  id: z.string().min(1, 'ID người dùng không được để trống'),
+  username: z.string().min(1, 'Username không được để trống'),
+  role: roleSchema,
+  iat: z.number().optional(),
+  exp: z.number().optional(),
+});
+
+export type JwtAuthPayload = z.infer<typeof jwtAuthPayloadSchema>;
+
+export type AuthUser = Pick<JwtAuthPayload, 'id' | 'username' | 'role'>;

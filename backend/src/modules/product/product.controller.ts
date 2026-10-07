@@ -13,7 +13,7 @@ const createProductSchema = z.object({
     toppingGroupId: z.uuid('Nhóm Topping không hợp lệ').nullable().optional(),
     price: z.number().int('Giá phải là số nguyên').positive('Giá phải là số nguyên dương').max(10000000, 'Giá không được vượt quá 10.000.000đ'),
     description: z.string().max(500, 'Mô tả tối đa 500 ký tự').optional(),
-    image: z.string().url('URL hình ảnh không hợp lệ').optional().or(z.literal('')),
+    image: z.url('URL hình ảnh không hợp lệ').optional().or(z.literal('')),
     isActive: z.boolean().optional(),
     sizes: z.array(z.object({
         sizeName: z.string().min(1, 'Tên size không được để trống').max(20, 'Tên size tối đa 20 ký tự'),
@@ -39,7 +39,7 @@ export const productController = {
         try {
             const { id } = paramsSchema.parse(req.params);
             const product = await productService.getById(id);
-            if (!product) throw { statusCode: 404, message: 'Không tìm thấy sản phẩm' } as AppError;
+            if (!product) throw new AppError(404, 'Không tìm thấy sản phẩm');
             res.status(200).json({ status: 'success', data: product });
         } catch (error) {
             next(error);

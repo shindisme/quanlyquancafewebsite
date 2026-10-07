@@ -1,19 +1,26 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError, ZodIssue } from 'zod';
 
-export interface AppError extends Error {
-    statusCode?: number;
+export class AppError extends Error {
+    statusCode: number;
+
+    constructor(statusCode: number, message: string) {
+        super(message);
+        this.statusCode = statusCode;
+        this.name = 'AppError';
+        Error.captureStackTrace?.(this, this.constructor);
+    }
 }
 
 // Middleware xử lý lỗi chung 
 export const errorHandler = (
-    err: AppError,
+    err: any,
     req: Request,
     res: Response,
     next: NextFunction
 ): any => {
-    // Log lỗi ra console để debug
-    console.error(`[Error] ${req.method} ${req.url} >> ${err.message}`);
+    // Ghi log lỗi ra console
+    console.error(`[Error] ${req.method} ${req.url} : ${err.message || err}`);
 
     // Xử lý lỗi validation từ Zod
     if (err instanceof ZodError) {
@@ -27,7 +34,7 @@ export const errorHandler = (
         });
     }
 
-    // Các lỗi HTTP custom mà mình tự throw (vd: throw new AppError(401, 'Unauthorized'))
+    // Các lỗi HTTP tùy biến từ AppError
     if (err.statusCode) {
         return res.status(err.statusCode).json({
             status: 'error',
@@ -35,16 +42,15 @@ export const errorHandler = (
         });
     }
 
-    // Nếu không thuộc các loại trên, trả về lỗi 500 (Lỗi hệ thống)
+    // Trường hợp còn lại trả về lỗi hệ thống 500
     return res.status(500).json({
         status: 'error',
-        message: 'Internal Server Error (Lỗi máy chủ nội bộ)',
-        // Gắn thêm stack trace nếu đang ở môi trường development để dễ fix bug
+        message: 'Lỗi máy chủ nội bộ',
         ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
     });
 };
 
-// Middleware bắt lỗi 404 (Không tìm thấy route)
+// Middleware xử lý khi không tìm thấy route
 export const notFoundHandler = (req: Request, res: Response, next: NextFunction): any => {
     return res.status(404).json({
         status: 'error',

@@ -4,7 +4,7 @@ import { AppError } from '../../middlewares/error.middleware.js';
 import { z } from 'zod';
 
 const paramsSchema = z.object({
-    id: z.string().uuid('id không hợp lệ')
+    id: z.uuid('id không hợp lệ')
 });
 
 const categorySchema = z.object({
@@ -27,7 +27,7 @@ export const categoryController = {
             const { id } = paramsSchema.parse(req.params);
             const category = await categoryService.getCategoryById(id);
             if (!category) {
-                throw { statusCode: 404, message: "Không tìm thấy danh mục" } as AppError;
+                throw new AppError(404, 'Không tìm thấy danh mục');
             }
             res.status(200).json({ status: 'success', data: category });
         } catch (error) {

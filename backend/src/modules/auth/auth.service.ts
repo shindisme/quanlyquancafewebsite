@@ -2,6 +2,7 @@ import prisma from '../../config/prisma.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { AppError } from '../../middlewares/error.middleware.js';
+import { JWT_SECRET, JWT_EXPIRES_IN } from '../../config/jwt.js';
 
 export const authService = {
   async login(usernameOrEmail: string, pass: string) {
@@ -39,11 +40,10 @@ export const authService = {
     }
 
     // Sign JWT
-    const secret = process.env.JWT_SECRET || 'secretkey@2004';
     const token = jwt.sign(
       { id: user.id, role: user.role, username: user.username },
-      secret,
-      { expiresIn: '1d' }
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'] }
     );
 
     const { password, ...userWithoutPassword } = user;

@@ -3,7 +3,7 @@ import { couponService } from './coupon.service.js';
 import { AppError } from '../../middlewares/error.middleware.js';
 import { z } from 'zod';
 
-const paramSchema = z.object({ id: z.string().uuid() });
+const paramSchema = z.object({ id: z.uuid() });
 
 const baseCouponSchema = z.object({
   code: z.string().min(3, 'Mã coupon phải có ít nhất 3 ký tự').max(20, 'Mã coupon tối đa 20 ký tự').trim().toUpperCase(),
@@ -46,7 +46,7 @@ export const couponController = {
     try {
       const { id } = paramSchema.parse(req.params);
       const data = await couponService.getValidCoupon(id);
-      if (!data) throw { statusCode: 404, message: 'Coupon not found or invalid' } as AppError;
+      if (!data) throw new AppError(404, 'Không tìm thấy mã giảm giá hoặc mã không hợp lệ');
       res.status(200).json({ status: 'success', data });
     } catch (error) {
       next(error);
@@ -56,9 +56,9 @@ export const couponController = {
   async apply(req: Request, res: Response, next: NextFunction) {
     try {
       const code = req.body.code || req.query.code;
-      if (!code) throw { statusCode: 400, message: 'Vui lòng nhập mã giảm giá' } as AppError;
+      if (!code) throw new AppError(400, 'Vui lòng nhập mã giảm giá');
       const data = await couponService.getValidCoupon(code as string);
-      if (!data) throw { statusCode: 404, message: 'Mã giảm giá không tồn tại hoặc đã hết hạn' } as AppError;
+      if (!data) throw new AppError(404, 'Mã giảm giá không tồn tại hoặc đã hết hạn');
       res.status(200).json({ status: 'success', data, message: 'Áp dụng mã thành công' });
     } catch (error) {
       next(error);
@@ -90,7 +90,7 @@ export const couponController = {
     try {
       const { id } = paramSchema.parse(req.params);
       await couponService.delete(id);
-      res.status(200).json({ status: 'success', message: 'Deleted successfully' });
+      res.status(200).json({ status: 'success', message: 'Đã xóa mã giảm giá thành công' });
     } catch (error) {
       next(error);
     }

@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { paymentController } from './payment.controller.js';
-import { authenticate } from '../../middlewares/auth.middleware.js';
+import { authenticate, authorize } from '../../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.use(authenticate);
+// Quan tri vien va nhan vien xem thong tin thanh toan
+router.use(authenticate, authorize('ADMIN', 'STAFF'));
 
 router.get('/invoice/:invoiceId', paymentController.getByInvoiceId);
 

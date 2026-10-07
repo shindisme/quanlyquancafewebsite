@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { authService } from './auth.service.js';
 import prisma from '../../config/prisma.js';
+import { AppError } from '../../middlewares/error.middleware.js';
 import { z } from 'zod';
 
 const loginSchema = z.object({
-  username: z.string().min(1, 'Vui lòng nhập tên đăng nhập/email'),
+  username: z.string().min(1, 'Vui lòng nhập tên đăng nhập hoặc email'),
   password: z.string().min(1, 'Vui lòng nhập mật khẩu')
 });
 
@@ -23,7 +24,7 @@ export const authController = {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return res.status(401).json({ status: 'error', message: 'Không tìm thấy thông tin người dùng' });
+        throw new AppError(401, 'Không tìm thấy thông tin người dùng');
       }
 
       const user = await prisma.user.findUnique({
@@ -32,7 +33,7 @@ export const authController = {
       });
 
       if (!user) {
-        return res.status(404).json({ status: 'error', message: 'Người dùng không tồn tại' });
+        throw new AppError(404, 'Người dùng không tồn tại');
       }
 
       res.status(200).json({ status: 'success', data: user });

@@ -4,11 +4,11 @@ import { AppError } from '../../middlewares/error.middleware.js';
 import { z } from 'zod';
 
 const paramsSchema = z.object({
-    id: z.string().uuid('id không hợp lệ')
+    id: z.uuid('id không hợp lệ')
 });
 
 const areaSchema = z.object({
-    name: z.string().min(1, 'Tên khu vực không được để trống').max(50, 'Tên khu vực tối đa 50 ký tự').trim()
+    name: z.string().trim().min(1, 'Tên khu vực không được để trống').max(50, 'Tên khu vực tối đa 50 ký tự')
 });
 
 export const areaController = {
@@ -25,7 +25,9 @@ export const areaController = {
         try {
             const { id } = paramsSchema.parse(req.params);
             const area = await areaService.getAreaById(id);
-            if (!area) throw { statusCode: 404, message: 'Không tìm thấy khu vực' } as AppError;
+            if (!area) {
+                throw new AppError(404, 'Không tìm thấy khu vực');
+            }
             res.status(200).json({ status: 'success', data: area });
         } catch (error) {
             next(error);

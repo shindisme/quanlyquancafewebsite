@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { areaController } from './area.controller.js';
+import { authenticate, authorize } from '../../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.get('/', areaController.getAll);
-router.post('/', areaController.create);
-router.get('/:id', areaController.getById);
-router.put('/:id', areaController.update);
-router.delete('/:id', areaController.remove);
+router.get('/', authenticate, areaController.getAll);
+router.post('/', authenticate, authorize('ADMIN', 'STAFF'), areaController.create);
+router.get('/:id', authenticate, areaController.getById);
+router.put('/:id', authenticate, authorize('ADMIN', 'STAFF'), areaController.update);
+router.delete('/:id', authenticate, authorize('ADMIN'), areaController.remove);
 
 export default router;

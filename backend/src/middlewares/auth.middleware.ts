@@ -1,42 +1,51 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { AppError } from './error.middleware.js';
-import type { JwtAuthPayload, Role } from '../types/auth.type.js';
+import { JWT_SECRET } from '../config/jwt.js';
+import { jwtAuthPayloadSchema, type Role } from '../types/auth.type.js';
 
+// Middleware xác thực người dùng qua JWT
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return next({ statusCode: 401, message: 'Vui lòng đăng nhập để tiếp tục' } as AppError);
+  if (!authHeader) {
+    return next(new AppError(401, 'Vui lòng đăng nhập để tiếp tục'));
   }
 
-  const token = authHeader.split(' ')[1];
-  if (!token) {
-    return next({ statusCode: 401, message: 'Token không hợp lệ' } as AppError);
+  const parts = authHeader.trim().split(/\s+/);
+  if (parts.length !== 2 || parts[0] !== 'Bearer' || !parts[1]) {
+    return next(new AppError(401, 'Token không đúng định dạng Bearer'));
   }
 
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error('JWT_SECRET chưa được cấu hình!');
-  }
+  const token = parts[1];
 
   try {
-    const payload = jwt.verify(token, secret) as unknown as JwtAuthPayload;
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const result = jwtAuthPayloadSchema.safeParse(decoded);
+
+    if (!result.success) {
+      return next(new AppError(401, 'Token không hợp lệ hoặc cấu trúc dữ liệu không đúng'));
+    }
+
     req.user = {
-      id: payload.id,
-      username: payload.username,
-      role: payload.role,
+      id: result.data.id,
+      username: result.data.username,
+      role: result.data.role,
     };
     next();
   } catch (error) {
-    return next({ statusCode: 401, message: 'Token không hợp lệ hoặc đã hết hạn' } as AppError);
+    return next(new AppError(401, 'Token không hợp lệ hoặc đã hết hạn'));
   }
 };
 
-export const authorize = (roles: Role[]) => {
+// Middleware phân quyền người dùng
+// Ho tro cac cach truyen authorize ADMIN STAFF hoac mang
+export const authorize = (...roles: (Role | Role[])[]) => {
+  const allowedRoles = roles.flat();
+
   return (req: Request, res: Response, next: NextFunction) => {
     const userRole = req.user?.role;
-    if (!userRole || !roles.includes(userRole)) {
-      return next({ statusCode: 403, message: 'Bạn không có quyền thực hiện hành động này' } as AppError);
+    if (!userRole || !allowedRoles.includes(userRole)) {
+      return next(new AppError(403, 'Bạn không có quyền thực hiện hành động này'));
     }
     next();
   };

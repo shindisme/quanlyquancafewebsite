@@ -7,11 +7,11 @@ const PORT = process.env.PORT || 3000
 async function startServer() {
     try {
         await prisma.$connect()
-        console.log(' --< Kết nối thành công tới Database >--')
+        console.log('Kết nối thành công tới Database')
 
         if (!process.env.VERCEL) {
             app.listen(PORT, () => {
-                console.log(` --< Server đang chạy tại http://localhost:${PORT} >--`);
+                console.log(`Server đang chạy tại http://localhost:${PORT}`);
             })
         }
     } catch (error) {

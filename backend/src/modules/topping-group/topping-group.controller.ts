@@ -10,13 +10,13 @@ const paramsSchema = z.object({
 const createToppingGroupSchema = z.object({
     name: z.string().min(1, 'Tên nhóm không được để trống').max(100, 'Tên nhóm tối đa 100 ký tự').trim(),
     description: z.string().max(255, 'Mô tả tối đa 255 ký tự').optional(),
-    toppingIds: z.array(z.string().uuid('Topping ID không hợp lệ')).default([])
+    toppingIds: z.array(z.uuid('Topping ID không hợp lệ')).default([])
 });
 
 const updateToppingGroupSchema = z.object({
     name: z.string().min(1, 'Tên nhóm không được để trống').max(100, 'Tên nhóm tối đa 100 ký tự').trim().optional(),
     description: z.string().max(255, 'Mô tả tối đa 255 ký tự').optional(),
-    toppingIds: z.array(z.string().uuid('Topping ID không hợp lệ')).optional()
+    toppingIds: z.array(z.uuid('Topping ID không hợp lệ')).optional()
 });
 
 export const toppingGroupController = {
@@ -33,7 +33,7 @@ export const toppingGroupController = {
         try {
             const { id } = paramsSchema.parse(req.params);
             const group = await toppingGroupService.getById(id);
-            if (!group) throw { statusCode: 404, message: 'Không tìm thấy nhóm topping' } as AppError;
+            if (!group) throw new AppError(404, 'Không tìm thấy nhóm topping');
             res.status(200).json({ status: 'success', data: group });
         } catch (error) {
             next(error);

@@ -21,7 +21,7 @@ app.use((req, _res, next) => {
 app.use('/api/v1', routes);
 app.use('/', routes);
 
-// handle routes ko tồn tại
+// Xu ly route khong ton tai
 app.use(notFoundHandler);
 app.use(errorHandler);
 

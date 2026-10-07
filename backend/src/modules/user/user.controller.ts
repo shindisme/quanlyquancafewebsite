@@ -4,12 +4,12 @@ import { AppError } from '../../middlewares/error.middleware.js';
 import { z } from 'zod';
 
 const paramsSchema = z.object({
-    id: z.string().uuid('id không hợp lệ')
+    id: z.uuid('id không hợp lệ')
 });
 
 const createUserSchema = z.object({
     username: z.string().min(3, 'Tên đăng nhập phải có ít nhất 3 ký tự').max(30, 'Tên đăng nhập tối đa 30 ký tự').trim(),
-    email: z.string().email('Email không hợp lệ').max(100, 'Email tối đa 100 ký tự'),
+    email: z.email('Email không hợp lệ').max(100, 'Email tối đa 100 ký tự'),
     name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự').max(50, 'Tên tối đa 50 ký tự').trim(),
     role: z.enum(['ADMIN', 'STAFF']).optional()
 });
@@ -38,7 +38,7 @@ export const userController = {
         try {
             const { id } = paramsSchema.parse(req.params);
             const user = await userService.getUserById(id);
-            if (!user) throw { statusCode: 404, message: 'Không tìm thấy người dùng' } as AppError;
+            if (!user) throw new AppError(404, 'Không tìm thấy người dùng');
             res.status(200).json({ status: 'success', data: user });
         } catch (error) {
             next(error);

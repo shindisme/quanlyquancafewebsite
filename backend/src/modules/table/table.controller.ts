@@ -4,17 +4,17 @@ import { AppError } from '../../middlewares/error.middleware.js';
 import { z } from 'zod';
 
 const paramsSchema = z.object({
-    id: z.string().uuid('id không hợp lệ')
+    id: z.uuid('id không hợp lệ')
 });
 
 const createTableSchema = z.object({
     name: z.string().min(1, 'Tên bàn không được để trống').max(30, 'Tên bàn tối đa 30 ký tự').trim(),
-    areaId: z.string().uuid('Khu vực không hợp lệ')
+    areaId: z.uuid('Khu vực không hợp lệ')
 });
 
 const updateTableSchema = z.object({
     name: z.string().min(1, 'Tên bàn không được để trống').max(30, 'Tên bàn tối đa 30 ký tự').trim().optional(),
-    areaId: z.string().uuid('Khu vực không hợp lệ').optional()
+    areaId: z.uuid('Khu vực không hợp lệ').optional()
 });
 
 const bookingSchema = z.object({
@@ -35,7 +35,7 @@ export const tableController = {
         try {
             const { id } = paramsSchema.parse(req.params);
             const table = await tableService.getById(id);
-            if (!table) throw { statusCode: 404, message: 'Không tìm thấy bàn' } as AppError;
+            if (!table) throw new AppError(404, 'Không tìm thấy bàn');
             res.status(200).json({ status: 'success', data: table });
         } catch (error) {
             next(error);
@@ -44,9 +44,9 @@ export const tableController = {
 
     async getByCode(req: Request, res: Response, next: NextFunction) {
         try {
-            const code = z.string().min(1).parse(req.params.code);
+            const code = z.string().min(1, 'Mã bàn không được để trống').parse(req.params.code);
             const table = await tableService.getByCode(code);
-            if (!table) throw { statusCode: 404, message: 'Không tìm thấy bàn với mã này' } as AppError;
+            if (!table) throw new AppError(404, 'Không tìm thấy bàn với mã này');
             res.status(200).json({ status: 'success', data: table });
         } catch (error) {
             next(error);

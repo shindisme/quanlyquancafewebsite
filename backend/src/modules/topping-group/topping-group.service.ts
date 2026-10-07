@@ -78,7 +78,7 @@ export const toppingGroupService = {
         });
 
         if (productCount > 0) {
-            // Đang có sản phẩm sử dụng -> gỡ toppingGroupId khỏi các sản phẩm đó hoặc đánh dấu deletedAt
+            // Dang co san pham su dung thi go toppingGroupId khoi cac san pham do
             await prisma.product.updateMany({
                 where: { toppingGroupId: id },
                 data: { toppingGroupId: null }

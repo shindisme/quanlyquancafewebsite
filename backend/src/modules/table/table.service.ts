@@ -1,5 +1,6 @@
 import prisma from '../../config/prisma.js';
 import { v7 as uuidv7 } from 'uuid';
+import { AppError } from '../../middlewares/error.middleware.js';
 
 export const tableService = {
     async getAll() {
@@ -51,19 +52,19 @@ export const tableService = {
     },
 
     async remove(id: string) {
-        // Kiểm tra bàn có hoá đơn UNPAID không
+        // Kiem tra ban co hoa don chua thanh toan hay khong
         const unpaidCount = await prisma.invoice.count({ where: { tableId: id, status: 'UNPAID' } });
         if (unpaidCount > 0) {
-            throw { statusCode: 400, message: 'Không thể xoá bàn đang có hoá đơn chưa thanh toán' };
+            throw new AppError(400, 'Không thể xoá bàn đang có hoá đơn chưa thanh toán');
         }
 
-        // Kiểm tra bàn có liên kết với Invoice nào không
+        // Kiem tra ban co lien ket voi hoa don nao khong
         const invoiceCount = await prisma.invoice.count({ where: { tableId: id } });
         if (invoiceCount === 0) {
-            // Không có Invoice → hard delete an toàn
+            // Khong co hoa don thi xoa vinh vien an toan
             return await prisma.table.delete({ where: { id } });
         } else {
-            // Có Invoice → soft delete để giữ tham chiếu lịch sử
+            // Co hoa don thi xoa mem de giu lich su
             return await prisma.table.update({
                 where: { id },
                 data: { deletedAt: new Date() }
