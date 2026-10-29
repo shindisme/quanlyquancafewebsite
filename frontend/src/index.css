@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
   /* Public colors */
@@ -17,7 +22,6 @@
   --drop-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
   --inner-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.3);
 
-
   /* ! Size */
   --header-height: 60px;
   --footer-height: 54px;
@@ -26,11 +30,11 @@
 
   /* Admin System */
   --admin-font: 'Inter', system-ui, -apple-system, sans-serif;
-  --sidebar-bg: #1c1410;
-  --sidebar-text: #a8998e;
-  --sidebar-active-bg: rgba(180, 83, 9, 0.15);
-  --sidebar-active-text: #f59e0b;
-  --sidebar-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #334155;
+  --sidebar-active-bg: linear-gradient(135deg, #0B3C60 0%, #0284c7 100%);
+  --sidebar-active-text: #ffffff;
+  --sidebar-hover: #f1f5f9;
   --sidebar-width: 260px;
 
   --admin-bg: #faf8f5;
@@ -48,6 +52,38 @@
   --admin-header-height: 64px;
   --admin-radius: 12px;
   --admin-radius-lg: 16px;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 * {
@@ -106,26 +142,51 @@ h6 {
   font-size: 13.5px !important;
   font-weight: 500 !important;
   font-family: var(--admin-font) !important;
+  color: var(--sidebar-text) !important;
+  transition: all 0.15s ease !important;
 }
 
 .ps-menu-button:hover {
   background-color: var(--sidebar-hover) !important;
+  color: #0f172a !important;
+}
+
+/* ACTIVE STATE: Bright white text and icon on vibrant blue */
+.ps-menu-button.ps-active,
+.ps-menu-button.ps-active:hover {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.32) !important;
+}
+
+.ps-menu-button.ps-active .ps-menu-label,
+.ps-menu-button.ps-active .ps-menu-icon,
+.ps-menu-button.ps-active svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
 }
 
 .ps-submenu-content {
-  background-color: transparent !important;
+  background-color: #ffffff !important;
 }
 
 .ps-menu-icon {
   min-width: 20px !important;
   width: 20px !important;
   height: 20px !important;
+  color: inherit !important;
 }
 
 /* SubMenu children: smaller + indented */
 .ps-submenu-content .ps-menu-button {
   font-size: 12.5px !important;
   padding-left: 24px !important;
+  color: #475569 !important;
+}
+
+.ps-submenu-content .ps-menu-button:hover {
+  background-color: var(--sidebar-hover) !important;
+  color: #0f172a !important;
 }
 
 /* ── Animations ── */
@@ -177,6 +238,19 @@ h6 {
   animation: slideDown 0.2s ease-out;
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite linear;
+}
+
 /* ── Admin Form Elements ── */
 .admin-input {
   font-family: var(--admin-font);
@@ -209,15 +283,16 @@ h6 {
   margin-bottom: 6px;
 }
 
-.admin-select {
+.admin-select,
+select {
   font-family: var(--admin-font);
   width: 100%;
   padding: 10px 14px;
   font-size: 14px;
   color: var(--admin-text);
-  background: var(--admin-surface);
+  background-color: var(--admin-surface);
   border: 1.5px solid var(--admin-border);
-  border-radius: 10px;
+  border-radius: 12px !important;
   outline: none;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -227,11 +302,32 @@ h6 {
   padding-right: 40px;
   transition: all 0.2s ease;
   cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.admin-select:focus {
+.admin-select:hover,
+select:hover {
+  border-color: #d6cdc5;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.admin-select:focus,
+select:focus {
   border-color: var(--admin-primary);
-  box-shadow: 0 0 0 3px var(--admin-primary-light);
+  box-shadow: 0 0 0 3px var(--admin-primary-light), 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+}
+
+.ui-card,
+.stat-card,
+.table-card,
+.product-card {
+  border-radius: 0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.ui-table-container,
+table {
+  border-radius: 0 !important;
 }
 
 /* ── Buttons ── */
@@ -325,4 +421,93 @@ h6 {
   background: #faf8f5;
   position: relative;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }

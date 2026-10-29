@@ -1,5 +1,6 @@
 
-import { Plus, Search, Download } from 'lucide-react';
+import { Plus, Download } from 'lucide-react';
+import SearchBar from '../../ui/SearchBar';
 
 interface Props {
   title: string;
@@ -64,18 +65,12 @@ const PageHeader = ({
 
     {/* Search bar */}
     {onSearchChange && (
-      <div style={{ position: 'relative', maxWidth: 400 }}>
-        <Search size={16} style={{
-          position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
-          color: '#94a3b8', pointerEvents: 'none',
-        }} />
-        <input
-          type="text"
+      <div style={{ maxWidth: 400 }}>
+        <SearchBar
           value={searchValue ?? ''}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={onSearchChange}
           placeholder={searchPlaceholder}
-          className="admin-input"
-          style={{ paddingLeft: 40 }}
+          shortcutHint="/"
         />
       </div>
     )}

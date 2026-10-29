@@ -12,6 +12,7 @@ import ProductFormModal from './ProductFormModal';
 import ConfirmDeleteModal from '../../../components/Admin/ui/ConfirmDeleteModal';
 import ExportConfirmModal from '../../../components/Admin/ui/ExportConfirmModal';
 import { exportToExcel } from '../../../utils/exportExcel';
+import { LoadingState } from '../../../components/ui';
 
 const ProductManage = () => {
   const [page, setPage] = useState(1);
@@ -97,9 +98,7 @@ const ProductManage = () => {
       <FilterTabs tabs={categoryTabs} activeKey={filterCategory} onChange={setFilterCategory} />
 
       {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600" />
-        </div>
+        <LoadingState message="Đang tải danh sách sản phẩm..." />
       ) : (
         <>
           <ProductList data={filtered} onEdit={openEdit} onDelete={openDelete} />

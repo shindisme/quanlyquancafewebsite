@@ -2,6 +2,7 @@ import { useState, useEffect, type FormEvent, type ChangeEvent } from 'react';
 import { ImagePlus } from 'lucide-react';
 import { toast } from 'react-toastify';
 import Modal from '../../../components/Admin/ui/Modal';
+import { Combobox, Spinner } from '../../../components/ui';
 import SizeEditor from './AddSize';
 import type { SizeRow } from './AddSize';
 import productService from '../../../services/productService';
@@ -125,32 +126,31 @@ const ProductFormModal = ({ isOpen, onClose, onSubmit, initialData, categories, 
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <div>
-            <label className="admin-label">Danh mục</label>
-            <select
+            <Combobox
+              label="Danh mục"
+              options={categories.map((c) => ({ value: c.id, label: c.name }))}
               value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              className="admin-select"
-            >
-              <option value="">-- Chọn danh mục --</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+              onChange={(val) => setCategoryId(String(val))}
+              placeholder="-- Chọn danh mục --"
+              searchPlaceholder="Tìm danh mục..."
+            />
           </div>
           <div>
-            <label className="admin-label">Nhóm Topping (Tùy chọn)</label>
-            <select
-              value={toppingGroupId}
-              onChange={(e) => setToppingGroupId(e.target.value)}
-              className="admin-select"
-            >
-              <option value="">-- Không dùng topping --</option>
-              {toppingGroups.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.name} ({g.toppings?.length || 0} topping)
-                </option>
-              ))}
-            </select>
+            <Combobox
+              label="Nhóm Topping (Tùy chọn)"
+              options={[
+                { value: '', label: '-- Không dùng topping --' },
+                ...toppingGroups.map((g) => ({
+                  value: g.id,
+                  label: g.name,
+                  badge: `${g.toppings?.length || 0} topping`,
+                })),
+              ]}
+              value={toppingGroupId ?? ''}
+              onChange={(val) => setToppingGroupId(val ? String(val) : null)}
+              placeholder="-- Không dùng topping --"
+              searchPlaceholder="Tìm nhóm topping..."
+            />
           </div>
         </div>
 
@@ -248,7 +248,13 @@ const ProductFormModal = ({ isOpen, onClose, onSubmit, initialData, categories, 
             style={{ flex: 1 }}
             disabled={loading || uploading}
           >
-            {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Thêm'}
+            {loading ? (
+              <Spinner size="sm" color="white" text="Đang lưu..." />
+            ) : initialData ? (
+              'Cập nhật'
+            ) : (
+              'Thêm'
+            )}
           </button>
         </div>
       </form>

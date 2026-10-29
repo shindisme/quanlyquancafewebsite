@@ -110,7 +110,7 @@ const CheckoutPage = () => {
 
       {/* Items */}
       <div style={{ padding: '16px' }}>
-        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #f0ebe5', overflow: 'hidden' }}>
+        <div style={{ background: '#fff', borderRadius: 0, border: '1px solid #f0ebe5', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}>
           {items.map((item, idx) => {
             const toppingTotal = item.toppings.reduce((s, t) => s + t.price, 0);
             const unitPrice = item.price + item.extraPrice + toppingTotal;
@@ -151,14 +151,15 @@ const CheckoutPage = () => {
 
         {/* Info */}
         <div style={{
-          background: '#fef3c7', borderRadius: 12, padding: '12px 16px', marginTop: 12,
+          background: '#fef3c7', borderRadius: 0, padding: '12px 16px', marginTop: 12,
           border: '1px solid #fde68a', fontSize: 13, color: '#92400e', lineHeight: 1.6,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
         }}>
           <strong>💡 Lưu ý:</strong> Đơn hàng sẽ được gửi đến quầy pha chế. Thanh toán tại quầy khi ra về.
         </div>
 
         {/* Summary */}
-        <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #f0ebe5', padding: '16px', marginTop: 12 }}>
+        <div style={{ background: '#fff', borderRadius: 0, border: '1px solid #f0ebe5', padding: '16px', marginTop: 12, boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ fontSize: 14, color: '#78716c' }}>Tổng ({totalCount} món)</span>
             <span style={{ fontSize: 14, fontWeight: 600, color: '#292018' }}>{totalPrice.toLocaleString('vi-VN')}đ</span>

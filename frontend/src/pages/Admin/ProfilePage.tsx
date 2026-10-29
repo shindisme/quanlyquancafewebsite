@@ -50,8 +50,8 @@ const ProfilePage = () => {
     <div style={{ maxWidth: 720, margin: '0 auto', fontFamily: 'var(--admin-font)' }}>
       {/* Profile Card */}
       <div style={{
-        background: '#fff', borderRadius: 20, overflow: 'hidden',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0',
+        background: '#fff', borderRadius: 0, overflow: 'hidden',
+        boxShadow: '0 4px 14px rgba(0,0,0,0.08)', border: '1px solid #e2e8f0',
         marginBottom: 24,
       }}>
         {/* Banner */}
@@ -84,8 +84,8 @@ const ProfilePage = () => {
 
       {/* Change Password  */}
       <div style={{
-        background: '#fff', borderRadius: 20,
-        boxShadow: '0 1px 3px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0',
+        background: '#fff', borderRadius: 0,
+        boxShadow: '0 4px 14px rgba(0,0,0,0.08)', border: '1px solid #e2e8f0',
         padding: 32,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>

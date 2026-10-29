@@ -168,13 +168,14 @@ const POSPage = () => {
           {filteredTables.map(t => (
             <button key={t.id} onClick={() => { setSelectedTable(t); setShowTableModal(false); }}
               style={{
-                padding: '20px 16px', borderRadius: 14,
+                padding: '20px 16px', borderRadius: 0,
                 border: '2px solid ' + (t.isBooked ? '#fecaca' : '#dcfce7'),
                 background: t.isBooked ? '#fef2f2' : 'white',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
                 cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s', fontFamily: 'var(--admin-font)',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.1)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.12)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
             >
               <Table2 size={28} style={{ margin: '0 auto 8px', color: t.isBooked ? '#dc2626' : '#16a34a' }} />
               <div style={{ fontSize: 15, fontWeight: 700, color: '#292018' }}>{t.name}</div>
@@ -249,12 +250,13 @@ const POSPage = () => {
             {filteredProducts.map(p => (
               <button key={p.id} onClick={() => setSelectedProduct(p)}
                 style={{
-                  padding: 0, borderRadius: 14, border: '1.5px solid #e8e0d8',
+                  padding: 0, borderRadius: 0, border: '1.5px solid #e8e0d8',
                   background: 'white', cursor: 'pointer', textAlign: 'left',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
                   transition: 'all 0.15s', fontFamily: 'var(--admin-font)', overflow: 'hidden',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#b45309'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.08)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e8e0d8'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#b45309'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e8e0d8'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
               >
                 {/* Image */}
                 <div style={{ position: 'relative', paddingTop: '70%', background: '#f5f0eb', overflow: 'hidden' }}>
@@ -307,7 +309,8 @@ const POSPage = () => {
       {/* RIGHT — Cart */}
       <div style={{
         width: 360, flexShrink: 0, display: 'flex', flexDirection: 'column',
-        background: 'white', borderRadius: 16, border: '1.5px solid #e8e0d8', overflow: 'hidden',
+        background: 'white', borderRadius: 0, border: '1.5px solid #e8e0d8', overflow: 'hidden',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
       }}>
         <div style={{
           padding: '16px 20px', borderBottom: '1px solid #f5f0eb',

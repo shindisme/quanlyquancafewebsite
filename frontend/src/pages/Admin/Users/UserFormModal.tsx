@@ -1,6 +1,7 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import Modal from '../../../components/Admin/ui/Modal';
+import { Select, Spinner } from '../../../components/ui';
 
 interface User { id: string; name: string; role: string; username?: string; email?: string; }
 
@@ -42,6 +43,11 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, initialData }: Props) => {
     finally { setLoading(false); }
   };
 
+  const roleOptions: { value: 'ADMIN' | 'STAFF'; label: string }[] = [
+    { value: 'STAFF', label: 'Nhân viên' },
+    { value: 'ADMIN', label: 'Quản trị viên (Admin)' },
+  ];
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={initialData ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên'} size="sm">
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -54,10 +60,19 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, initialData }: Props) => {
           <div><label className="admin-label">Email</label><input type="email" value={email} className="admin-input" readOnly style={{ backgroundColor: '#f1f5f9', cursor: 'not-allowed', color: '#64748b' }} /></div>
         )}
         <div><label className="admin-label">Họ tên</label><input type="text" value={name} onChange={(e) => setName(e.target.value)} className="admin-input" placeholder="Tối thiểu 2 ký tự" /></div>
-        <div><label className="admin-label">Vai trò</label><select value={role} onChange={(e) => setRole(e.target.value as 'ADMIN' | 'STAFF')} className="admin-select"><option value="STAFF">Nhân viên</option><option value="ADMIN">Admin</option></select></div>
+        <div>
+          <Select
+            label="Vai trò"
+            options={roleOptions}
+            value={role}
+            onChange={(val) => setRole(val as 'ADMIN' | 'STAFF')}
+          />
+        </div>
         <div style={{ display: 'flex', gap: 12, paddingTop: 8 }}>
           <button type="button" className="btn-secondary" style={{ flex: 1 }} onClick={onClose}>Huỷ</button>
-          <button type="submit" className="btn-primary" style={{ flex: 1 }} disabled={loading}>{loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Thêm'}</button>
+          <button type="submit" className="btn-primary" style={{ flex: 1 }} disabled={loading}>
+            {loading ? <Spinner size="sm" color="white" text="Đang lưu..." /> : initialData ? 'Cập nhật' : 'Thêm'}
+          </button>
         </div>
       </form>
     </Modal>

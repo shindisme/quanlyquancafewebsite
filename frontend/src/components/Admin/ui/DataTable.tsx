@@ -27,14 +27,14 @@ const DataTable = <T extends { id?: string }>({
   return (
     <div style={{
       background: '#fff',
-      borderRadius: 16,
+      borderRadius: 0,
       border: '1px solid #e2e8f0',
       overflow: 'hidden',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+      boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
     }}>
       <table
         className='table-fixed'
-        style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, fontFamily: 'var(--admin-font)' }}>
+        style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, fontFamily: 'var(--admin-font)', borderRadius: 0 }}>
         <thead>
           <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
             <th style={{

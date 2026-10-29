@@ -105,8 +105,8 @@ const InvoiceManage = () => {
           <p style={{ fontSize: 15, fontWeight: 600 }}>Không có hoá đơn</p>
         </div>
       ) : (
-        <div style={{ background: 'white', borderRadius: 14, border: '1.5px solid #e8e0d8', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+        <div style={{ background: 'white', borderRadius: 0, border: '1.5px solid #e8e0d8', overflow: 'hidden', boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, borderRadius: 0 }}>
             <thead>
               <tr style={{ background: '#faf8f5', borderBottom: '1.5px solid #e8e0d8' }}>
                 {['Mã', 'Bàn', 'Tổng tiền', 'Giảm giá', 'Thanh toán', 'Trạng thái', 'Thời gian', ''].map(h => (
@@ -177,8 +177,9 @@ const InvoiceManage = () => {
 
                 {/* Invoice info */}
                 <div style={{
-                  padding: '14px 16px', borderRadius: 12, background: '#faf8f5',
+                  padding: '14px 16px', borderRadius: 0, background: '#faf8f5',
                   border: '1px solid #e8e0d8', marginBottom: 16,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                     <span style={{ fontSize: 13, color: '#78716c' }}>Bàn</span>
@@ -210,8 +211,9 @@ const InvoiceManage = () => {
                 </p>
                 {detailInvoice.orders?.map((order: any, idx: number) => (
                   <div key={order.id} style={{
-                    marginBottom: 10, padding: '12px 14px', borderRadius: 10,
+                    marginBottom: 10, padding: '12px 14px', borderRadius: 0,
                     border: '1px solid #e8e0d8', background: '#faf8f5',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                       <span style={{ fontSize: 13, fontWeight: 700, color: '#292018' }}>
@@ -241,8 +243,9 @@ const InvoiceManage = () => {
                     </p>
                     {detailInvoice.payments.map((p: any) => (
                       <div key={p.id} style={{
-                        padding: '10px 14px', borderRadius: 10, background: '#dcfce7',
+                        padding: '10px 14px', borderRadius: 0, background: '#dcfce7',
                         border: '1px solid #bbf7d0', marginBottom: 8,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                         display: 'flex', justifyContent: 'space-between', fontSize: 13,
                       }}>
                         <span style={{ fontWeight: 600, color: '#16a34a' }}>

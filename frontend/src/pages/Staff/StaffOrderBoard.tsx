@@ -1,17 +1,3 @@
-/**
- * StaffOrderBoard — Kanban board quản lý đơn hàng (phiếu pha chế)
- *
- * TẠI SAO Kanban thay vì Table?
- * - Kanban cho phép nhìn tổng quan trạng thái ngay lập tức
- * - 1-click chuyển trạng thái thay vì mở modal → select → submit
- * - Phù hợp workflow cafe: Chờ → Đang làm → Xong
- *
- * HOẠT ĐỘNG:
- * - Fetch tất cả orders → group theo status → render 4 cột
- * - Auto refresh mỗi 15 giây (useAutoRefresh)
- * - Mỗi card có nút chuyển trạng thái kế tiếp
- */
-
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -133,8 +119,9 @@ const StaffOrderBoard = () => {
         {grouped.map(col => (
           <div key={col.key} style={{
             display: 'flex', flexDirection: 'column',
-            background: '#f8fafc', borderRadius: 14,
+            background: '#f8fafc', borderRadius: 0,
             border: '1.5px solid #e2e8f0', overflow: 'hidden',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
           }}>
             {/* Column header */}
             <div style={{
@@ -164,13 +151,14 @@ const StaffOrderBoard = () => {
                   const nextStatus = nextStatusMap[order.status];
                   return (
                     <div key={order.id} style={{
-                      background: 'white', borderRadius: 10,
+                      background: 'white', borderRadius: 0,
                       border: '1px solid #e8e0d8', padding: '12px 14px',
                       marginBottom: 8, transition: 'all 0.15s',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                       cursor: 'pointer',
                     }}
-                      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
+                      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.1)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; }}
                     >
                       {/* Order code + table */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>

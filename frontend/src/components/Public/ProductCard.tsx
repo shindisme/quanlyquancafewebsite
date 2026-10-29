@@ -11,8 +11,8 @@ const ProductCard = ({ product, onAdd }: Props) => {
 
   return (
     <div style={{
-      background: '#fff', borderRadius: 16, overflow: 'hidden',
-      boxShadow: 'var(--drop-shadow)',
+      background: '#fff', borderRadius: 0, overflow: 'hidden',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
       border: '1px solid #f0ebe5',
       transition: 'transform 0.2s ease, box-shadow 0.2s ease',
       fontFamily: 'var(--admin-font)',

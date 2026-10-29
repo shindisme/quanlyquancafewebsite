@@ -107,7 +107,7 @@ const Login = () => {
       <div className="animate-scaleIn" style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 420, margin: '0 16px' }}>
         <div style={{
           background: 'rgba(255,255,255,0.97)',
-          borderRadius: 24, padding: '48px 40px',
+          borderRadius: 0, padding: '48px 40px',
           boxShadow: '0 25px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1)',
           backdropFilter: 'blur(20px)',
         }}>

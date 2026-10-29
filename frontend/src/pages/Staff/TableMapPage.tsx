@@ -179,16 +179,17 @@ const TableMapPage = () => {
             key={t.id}
             onClick={() => handleTableClick(t)}
             style={{
-              padding: '24px 16px', borderRadius: 14,
+              padding: '24px 16px', borderRadius: 0,
               border: `2px solid ${t.isBooked ? '#fecaca' : '#dcfce7'}`,
               background: t.isBooked ? '#fef2f2' : 'white',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
               cursor: 'pointer', textAlign: 'center',
               transition: 'all 0.15s', fontFamily: 'var(--admin-font)',
               outline: selectedTable?.id === t.id ? '3px solid #b45309' : 'none',
               outlineOffset: -1,
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.12)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
           >
             <Table2 size={32} style={{ margin: '0 auto 10px', color: t.isBooked ? '#dc2626' : '#16a34a' }} />
             <div style={{ fontSize: 16, fontWeight: 700, color: '#292018' }}>{t.name}</div>
@@ -250,8 +251,9 @@ const TableMapPage = () => {
               <>
                 {/* Invoice info */}
                 <div style={{
-                  padding: '14px 16px', borderRadius: 12, background: '#fef3c7',
+                  padding: '14px 16px', borderRadius: 0, background: '#fef3c7',
                   border: '1px solid #fde68a', marginBottom: 16,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                 }}>
                   <div style={{ fontSize: 14, fontWeight: 700, color: '#b45309' }}>Hoá đơn: {invoice.code}</div>
                   <div style={{ fontSize: 12, color: '#92400e', marginTop: 4 }}>
@@ -262,8 +264,9 @@ const TableMapPage = () => {
                 {/* Orders list */}
                 {invoice.orders?.map((order: any, idx: number) => (
                   <div key={order.id} style={{
-                    marginBottom: 12, padding: '12px 14px', borderRadius: 10,
+                    marginBottom: 12, padding: '12px 14px', borderRadius: 0,
                     border: '1px solid #e8e0d8', background: '#faf8f5',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                       <span style={{ fontSize: 13, fontWeight: 700, color: '#292018' }}>
@@ -346,7 +349,7 @@ const TableMapPage = () => {
             onClick={e => e.stopPropagation()}
             className="animate-scaleIn"
             style={{
-              background: 'white', borderRadius: 20, padding: '32px',
+              background: 'white', borderRadius: 0, padding: '32px',
               width: 400, boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
               fontFamily: 'var(--admin-font)',
             }}
@@ -356,8 +359,9 @@ const TableMapPage = () => {
             </h3>
 
             <div style={{
-              padding: '14px 16px', borderRadius: 12, background: '#faf8f5',
+              padding: '14px 16px', borderRadius: 0, background: '#faf8f5',
               border: '1px solid #e8e0d8', marginBottom: 20,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                 <span style={{ color: '#78716c', fontSize: 13 }}>Hoá đơn</span>

@@ -91,12 +91,13 @@ const StaffInvoiceList = () => {
             const statusInfo = INVOICE_STATUS[inv.status as InvoiceStatusKey];
             return (
               <div key={inv.id} onClick={() => handleViewDetail(inv.id)} style={{
-                background: 'white', borderRadius: 14, border: '1.5px solid #e8e0d8', padding: '14px 18px',
+                background: 'white', borderRadius: 0, border: '1.5px solid #e8e0d8', padding: '14px 18px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
                 cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 transition: 'all 0.15s',
               }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#b45309'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e8e0d8'; e.currentTarget.style.boxShadow = 'none'; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#b45309'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.1)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e8e0d8'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
               >
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 700, color: '#b45309' }}>{inv.code}</div>
@@ -137,7 +138,7 @@ const StaffInvoiceList = () => {
               <h3 style={{ fontSize: 18, fontWeight: 700, color: '#292018' }}>{detail.code}</h3>
               <button onClick={() => setDetail(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: '#a8a29e' }}>×</button>
             </div>
-            <div style={{ padding: '14px 16px', borderRadius: 12, background: '#faf8f5', border: '1px solid #e8e0d8', marginBottom: 16 }}>
+            <div style={{ padding: '14px 16px', borderRadius: 0, background: '#faf8f5', border: '1px solid #e8e0d8', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontSize: 13, color: '#78716c' }}>Bàn</span>
                 <span style={{ fontSize: 13, fontWeight: 700, color: '#292018' }}>{detail.table?.name || '—'}</span>
@@ -160,7 +161,7 @@ const StaffInvoiceList = () => {
 
             <p style={{ fontSize: 14, fontWeight: 700, color: '#292018', marginBottom: 12 }}>Các lần gọi ({detail.orders?.length || 0})</p>
             {detail.orders?.map((order: any, idx: number) => (
-              <div key={order.id} style={{ marginBottom: 10, padding: '12px 14px', borderRadius: 10, border: '1px solid #e8e0d8', background: '#faf8f5' }}>
+              <div key={order.id} style={{ marginBottom: 10, padding: '12px 14px', borderRadius: 0, border: '1px solid #e8e0d8', background: '#faf8f5', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 13, fontWeight: 700, color: '#292018' }}>Lần {idx + 1} · {order.code}</span>
                   <span style={{ fontSize: 13, fontWeight: 700, color: '#b45309' }}>{formatCurrency(order.subTotal)}</span>

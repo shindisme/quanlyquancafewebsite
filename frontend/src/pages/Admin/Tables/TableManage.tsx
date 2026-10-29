@@ -13,6 +13,7 @@ import TableDetailModal from './TableDetailModal';
 import ConfirmDeleteModal from '../../../components/Admin/ui/ConfirmDeleteModal';
 import ExportConfirmModal from '../../../components/Admin/ui/ExportConfirmModal';
 import { exportToExcel } from '../../../utils/exportExcel';
+import { LoadingState } from '../../../components/ui';
 
 export interface Area { id: string; name: string; }
 export interface Table { id: string; name: string; areaId?: string; code: string; isBooked: boolean; area?: { id?: string; name: string; }; }
@@ -132,7 +133,7 @@ const TableManage = () => {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600" /></div>
+        <LoadingState message="Đang tải danh sách bàn..." />
       ) : viewMode === 'card' ? (
         <TableCardView
           data={filtered}

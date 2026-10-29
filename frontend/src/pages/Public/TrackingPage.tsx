@@ -158,8 +158,9 @@ const TrackingPage = () => {
             {/* Invoice header */}
             <div style={{
               background: invoice.status === 'PAID' ? '#dcfce7' : '#fef3c7',
-              borderRadius: 14, padding: '14px 16px', marginBottom: 16,
+              borderRadius: 0, padding: '14px 16px', marginBottom: 16,
               border: `1px solid ${invoice.status === 'PAID' ? '#bbf7d0' : '#fde68a'}`,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
               display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             }}>
               <div>
@@ -196,7 +197,8 @@ const TrackingPage = () => {
 
                 return (
                   <div key={order.id} style={{
-                    background: '#fff', borderRadius: 14, border: '1px solid #f0ebe5',
+                    background: '#fff', borderRadius: 0, border: '1px solid #f0ebe5',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
                     overflow: 'hidden',
                   }}>
                     {/* Order header */}

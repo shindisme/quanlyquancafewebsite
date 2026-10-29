@@ -62,6 +62,7 @@ const FilterTabs = ({ tabs, activeKey, onChange }: Props) => {
             minWidth: 160,
             fontFamily: 'inherit',
             transition: 'all 0.2s ease',
+            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
           }}
         >
           <option value="" disabled>Lọc theo...</option>

@@ -1,5 +1,6 @@
 import { Pencil, Trash2, Eye, HandPlatter } from 'lucide-react';
 import type { Table } from './TableManage';
+import { Badge, Tooltip } from '../../../components/ui';
 
 interface Props {
   data: Table[];
@@ -32,14 +33,24 @@ const TableCardView = ({ data, onView, onEdit, onDelete, onToggleBooked }: Props
           key={table.id}
           style={{
             background: '#fff',
-            borderRadius: 16,
-            border: `2px solid ${table.isBooked ? '#fecaca' : '#d1fae5'}`,
+            borderRadius: 12,
+            border: `1.5px solid ${table.isBooked ? '#fecaca' : '#d1fae5'}`,
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
             padding: 20,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             fontFamily: 'var(--admin-font)',
             position: 'relative',
+            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.08)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
           }}
         >
           {/* Status badge */}
@@ -49,14 +60,20 @@ const TableCardView = ({ data, onView, onEdit, onDelete, onToggleBooked }: Props
             <button
               onClick={() => onToggleBooked(table)}
               style={{
-                padding: '4px 10px', borderRadius: 12,
-                fontSize: 11, fontWeight: 700, border: 'none', cursor: 'pointer',
-                fontFamily: 'var(--admin-font)',
-                background: table.isBooked ? '#fef2f2' : '#ecfdf5',
-                color: table.isBooked ? '#dc2626' : '#059669',
+                border: 'none',
+                background: 'transparent',
+                cursor: 'pointer',
+                padding: 0,
               }}
+              title="Nhấn để đổi trạng thái"
             >
-              {table.isBooked ? 'Đang dùng' : 'Trống'}
+              <Badge
+                variant={table.isBooked ? 'danger' : 'success'}
+                dot
+                pulse={table.isBooked}
+              >
+                {table.isBooked ? 'Đang dùng' : 'Trống'}
+              </Badge>
             </button>
           </div>
 
@@ -82,43 +99,64 @@ const TableCardView = ({ data, onView, onEdit, onDelete, onToggleBooked }: Props
 
           {/* Area */}
           <p style={{
-            fontSize: 12, color: '#94a3b8', marginBottom: 8,
+            fontSize: 12, color: '#94a3b8', marginBottom: 14,
           }}>
             {table.area?.name ?? '—'}
           </p>
 
           {/* Actions */}
           <div style={{ display: 'flex', gap: 6 }}>
-            <button
-              onClick={() => onView(table)}
-              style={{
-                width: 32, height: 32, borderRadius: 8, border: 'none',
-                background: '#f8fafc', color: '#64748b', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
-            >
-              <Eye size={14} />
-            </button>
-            <button
-              onClick={() => onEdit(table)}
-              style={{
-                width: 32, height: 32, borderRadius: 8, border: 'none',
-                background: '#eff6ff', color: '#3b82f6', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
-            >
-              <Pencil size={14} />
-            </button>
-            <button
-              onClick={() => onDelete(table)}
-              style={{
-                width: 32, height: 32, borderRadius: 8, border: 'none',
-                background: '#fef2f2', color: '#ef4444', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
-            >
-              <Trash2 size={14} />
-            </button>
+            <Tooltip content="Xem chi tiết">
+              <button
+                onClick={() => onView(table)}
+                style={{
+                  width: 32, height: 32, borderRadius: 8, border: 'none',
+                  background: '#f8fafc', color: '#64748b', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background 0.15s ease, color 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#e2e8f0';
+                  e.currentTarget.style.color = '#0f172a';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#f8fafc';
+                  e.currentTarget.style.color = '#64748b';
+                }}
+              >
+                <Eye size={14} />
+              </button>
+            </Tooltip>
+            <Tooltip content="Chỉnh sửa">
+              <button
+                onClick={() => onEdit(table)}
+                style={{
+                  width: 32, height: 32, borderRadius: 8, border: 'none',
+                  background: '#eff6ff', color: '#3b82f6', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#dbeafe'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#eff6ff'; }}
+              >
+                <Pencil size={14} />
+              </button>
+            </Tooltip>
+            <Tooltip content="Xoá bàn">
+              <button
+                onClick={() => onDelete(table)}
+                style={{
+                  width: 32, height: 32, borderRadius: 8, border: 'none',
+                  background: '#fef2f2', color: '#ef4444', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#fee2e2'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#fef2f2'; }}
+              >
+                <Trash2 size={14} />
+              </button>
+            </Tooltip>
           </div>
         </div>
       ))}

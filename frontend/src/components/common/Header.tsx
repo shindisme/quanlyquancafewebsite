@@ -46,15 +46,34 @@ const Header = ({ basePath }: HeaderProps) => {
           onClick={() => setDropOpen((v) => !v)}
           style={{
             display: 'flex', alignItems: 'center', gap: 10,
-            padding: '6px 12px 6px 6px',
+            padding: '5px 12px 5px 6px',
             borderRadius: 12, border: '1.5px solid #e8e0d8',
             background: 'white', cursor: 'pointer',
             transition: 'all 0.15s ease',
-            boxShadow: 'var(--inner-shadow)',
+            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
           }}
           onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#d6cdc5'; e.currentTarget.style.background = '#faf8f5'; }}
           onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#e8e0d8'; e.currentTarget.style.background = 'white'; }}
         >
+          {/* Avatar vuông bo tròn */}
+          <div style={{
+            width: 36,
+            height: 36,
+            borderRadius: 8,
+            border: '1.5px solid #d1d5db',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#d1d5db',
+            flexShrink: 0,
+          }}>
+            <img
+              src="/default-avatar.svg"
+              alt="Avatar"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </div>
 
           <div style={{ textAlign: 'left' }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: '#292018', lineHeight: 1.2 }}>{user?.name}</p>
@@ -70,9 +89,26 @@ const Header = ({ basePath }: HeaderProps) => {
             boxShadow: '0 10px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)',
             overflow: 'hidden', zIndex: 50, fontFamily: 'var(--admin-font)',
           }}>
-            <div style={{ padding: '14px 16px', borderBottom: '1px solid #f5f0eb' }}>
-              <p style={{ fontSize: 14, fontWeight: 700, color: '#292018' }}>{user?.name}</p>
-              <p style={{ fontSize: 12, color: '#a8a29e', marginTop: 2 }}>@{user?.username}</p>
+            <div style={{ padding: '14px 16px', borderBottom: '1px solid #f5f0eb', display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{
+                width: 38,
+                height: 38,
+                borderRadius: 8,
+                border: '1.5px solid #d1d5db',
+                overflow: 'hidden',
+                flexShrink: 0,
+                background: '#d1d5db',
+              }}>
+                <img
+                  src="/default-avatar.svg"
+                  alt="Avatar"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+              <div style={{ overflow: 'hidden' }}>
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#292018', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.name}</p>
+                <p style={{ fontSize: 12, color: '#a8a29e', marginTop: 2 }}>@{user?.username}</p>
+              </div>
             </div>
             <div style={{ padding: '6px' }}>
               <button
